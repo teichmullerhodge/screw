@@ -11,7 +11,7 @@
 static inline void usage() {
   printf("Usage: screw [command]\n");
   printf("Type screw help for a list of commands\n");
-  exit(-1);
+  exit(0);
 }
 
 static inline void display_help() {
@@ -20,7 +20,7 @@ static inline void display_help() {
   puts("Brief: Creates a new project on a new folder named after your project "
        "in the desired language.");
   puts("Flags: c/cpp, specifies if the project is in the C or C++ language. If "
-       "the flag isn't provided C the project is created in C.\n");
+       "the flag isn't provided the project is created in C.\n");
   puts("Commands: build [flags]");
   puts("Brief: Run the Makefile to build your project. It won't build if the "
        "src/Makefile file was moved or erased.");
@@ -30,28 +30,18 @@ static inline void display_help() {
   puts("Commands: run [flags]");
   puts("Brief: Runs the build file.");
   puts("Flags: dev/release, runs the application specified in the dev or "
-       "release folder. Dev is assumed to be the standart.\n");
+       "release folder. Dev is assumed to be the standard.\n");
   exit(-1);
 }
 
-static inline s32 panic(const char *message) {
+static inline void panic(const char *message) {
   printf("%s %s\n", message, strerror(errno));
   exit(-1);
 }
 
-static inline s32 panic_noerrno(const char *message) {
+static inline void panic_noerrno(const char *message) {
   printf("%s\n", message);
   exit(-1);
-}
-
-static inline bool create_pid() {
-  pid_t pid = fork();
-  if (pid == -1) {
-    perror("fork failed");
-    exit(EXIT_FAILURE);
-  }
-
-  return true;
 }
 
 typedef enum {
