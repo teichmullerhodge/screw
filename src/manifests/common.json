@@ -15,8 +15,8 @@
       { "action": 0, "path": "src", "value": "" },
       { "action": 1, "path": "src/main.c", "value": "" },
       { "action": 1, "path": "cc.sh", "value": "" },
-      { "action": 2, "path": "src/main.c", "value": "templates/C/main.c", "isFilePath": true },
-      { "action": 2, "path": "cc.sh", "value": "templates/C/cc.sh", "isFilePath": true }
+      { "action": 2, "path": "src/main.c", "value": "resources/templates/C/main.c", "isFilePath": true },
+      { "action": 2, "path": "cc.sh", "value": "resources/templates/C/cc.sh", "isFilePath": true }
     ]
   }
   },
@@ -36,8 +36,8 @@
         { "action": 0, "path": "src", "value": "" },
         { "action": 1, "path": "src/main.cpp", "value": "" },
         { "action": 1, "path": "cc.sh", "value": "" },
-        { "action": 2, "path": "src/main.cpp", "value": "templates/CPP/main.cpp", "isFilePath": true },
-        { "action": 2, "path": "cc.sh", "value": "templates/CPP/cc.sh", "isFilePath": true }
+        { "action": 2, "path": "src/main.cpp", "value": "resources/templates/CPP/main.cpp", "isFilePath": true },
+        { "action": 2, "path": "cc.sh", "value": "resources/templates/CPP/cc.sh", "isFilePath": true }
       ]
     }
   },
@@ -57,8 +57,8 @@
         { "action": 0, "path": "src", "value": "" },
         { "action": 1, "path": "src/main.asm", "value": "" },
         { "action": 1, "path": "cc.sh", "value": "" },
-        { "action": 2, "path": "src/main.asm", "value": "templates/Assembly/main.asm", "isFilePath": true },
-        { "action": 2, "path": "cc.sh", "value": "templates/Assembly/cc.sh", "isFilePath": true }
+        { "action": 2, "path": "src/main.asm", "value": "resources/templates/Assembly/main.asm", "isFilePath": true },
+        { "action": 2, "path": "cc.sh", "value": "resources/templates/Assembly/cc.sh", "isFilePath": true }
       ]
     }
   },

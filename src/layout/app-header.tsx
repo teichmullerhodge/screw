@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Maximize2, Minus, X } from "lucide-react";
 import React from "react";
+import { getCurrentWindow } from '@tauri-apps/api/window';
+const appWindow = getCurrentWindow();
 
 interface AppHeaderProps {
   title: string;
@@ -17,15 +19,15 @@ export default function AppHeader(props: AppHeaderProps) {
         </div>
 
         <div className="flex items-center gap-1 -webkit-app-region:no-drag">
-          <WindowButton onClick={() => {}}>
+          <WindowButton onClick={() => appWindow.minimize()}>
             <Minus size={12} />
           </WindowButton>
 
-          <WindowButton onClick={() => {}}>
+          <WindowButton onClick={() => appWindow.toggleMaximize()}>
             <Maximize2 size={12} />
           </WindowButton>
 
-          <WindowButton danger onClick={() => {}}>
+          <WindowButton danger onClick={() => appWindow.close()}>
             <X size={12} />
           </WindowButton>
         </div>

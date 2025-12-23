@@ -1,4 +1,4 @@
-import { ArrowLeftToLine, ArrowRightToLine, FileDown, Inbox, Info, LucideProps, Plus, Settings, Store } from "lucide-react"
+import { ArrowLeftToLine, ArrowRightToLine, FileDown, Inbox, Info, LucideProps, Plus, Settings  } from "lucide-react"
 import react, { useState } from "react";
 
 import {

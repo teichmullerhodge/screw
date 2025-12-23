@@ -1,6 +1,7 @@
 use serde::Deserialize;
 use serde::Serialize;
-use crate::helpers::{create_file, mkdir, read_file, write_to_file};
+use crate::helpers::read_template;
+use crate::helpers::{create_file, mkdir, write_to_file};
 
 
 #[derive(Debug, Deserialize)]
@@ -79,7 +80,7 @@ impl From<ManifestResult> for u8 {
 }
 
 
-pub fn execute_manifest(project: ProjectManifest) -> ManifestResult {
+pub fn execute_manifest(app: tauri::AppHandle, project: ProjectManifest) -> ManifestResult {
     println!("Executing manifest: {}", project.name);
     let root = projects_root().join(project.language).join(project.category).join(project.name);
     for step in project.steps {
@@ -100,7 +101,7 @@ pub fn execute_manifest(project: ProjectManifest) -> ManifestResult {
         }
         OSActions::WriteToFile => {
             let contents = if step.is_file_path.unwrap_or(false) {
-                match read_file(step.value.clone().into()) {
+                match read_template(&app, step.value.clone().into()) {
                     Ok(data) => data,
                     Err(err) => {
                         eprintln!("Error reading {}: {}", step.value, err);

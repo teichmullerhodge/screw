@@ -4,11 +4,11 @@ pub mod projects;
 pub mod helpers;
 
 #[tauri::command]
-fn new_project(payload: &str) -> projects::ManifestResult {
+fn new_project(app: tauri::AppHandle, payload: &str) -> projects::ManifestResult {
     println!("Starting new project.");
     let conversion = serde_json::from_str(payload);
     let res = match conversion {
-        Ok(p) => execute_manifest(p),
+        Ok(p) => execute_manifest(app, p),
         Err(_err) => projects::ManifestResult::ErrorInvalidJson
     };
 
