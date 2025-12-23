@@ -1,26 +1,24 @@
 [
-  {
-    "identifier": "C",
-    "title": "C Console Project",
-    "description": "A C project focused on console and terminal applications. Includes stdio.h and stdlib.h, a basic main function, argument handling, and a template that prints a message to standard output.",
-    "imagePath": "/assets/c_prog.png",
-    "category": "Console/Terminal",
+{
+  "identifier": "C",
+  "title": "C Console Project",
+  "description": "A C project focused on console and terminal applications. Includes stdio.h and stdlib.h, a basic main function, argument handling, and a template that prints a message to standard output.",
+  "imagePath": "/assets/c_prog.png",
+  "category": "Console/Terminal",
+  "language": "C",
+  "manifest": {
+    "name": "app",
     "language": "C",
-    "manifest": {
-      "name": "app",
-      "language": "C",
-      "category": "terminal",
-      "steps": [
-        { "action": 0, "path": "build", "value": "" },
-        { "action": 0, "path": "src", "value": "" },
-        { "action": 1, "path": "src/main.c", "value": "" },
-        {
-          "action": 2,
-          "path": "src/main.c",
-          "value": "#include <stdio.h>\n\nint main(int argc, char **argv) {\n    (void)argc;\n    (void)argv;\n    printf(\"Hello, world!\");\n    return 0;\n}"
-        }
-      ]
-    }
+    "category": "terminal",
+    "steps": [
+      { "action": 0, "path": "build", "value": "" },
+      { "action": 0, "path": "src", "value": "" },
+      { "action": 1, "path": "src/main.c", "value": "" },
+      { "action": 1, "path": "cc.sh", "value": "" },
+      { "action": 2, "path": "src/main.c", "value": "templates/C/main.c", "isFilePath": true },
+      { "action": 2, "path": "cc.sh", "value": "templates/C/cc.sh", "isFilePath": true }
+    ]
+  }
   },
   {
     "identifier": "CPP",

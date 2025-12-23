@@ -9,6 +9,10 @@ pub fn mkdir(path: PathBuf) -> Result<(), std::io::Error> {
     Ok(())
 }
 
+pub fn read_file(path: PathBuf) -> Result<String, String> {
+    std::fs::read_to_string(path).map_err(|e| e.to_string())
+}
+
 pub fn create_file(path: PathBuf, contents: Option<String>) -> Result<(), Box<dyn std::error::Error>> {
     let mut file = match std::fs::File::create(&path) {
         Ok(f) => f,

@@ -1,6 +1,6 @@
 use serde::Deserialize;
-
-use crate::helpers::{create_file, mkdir, write_to_file};
+use serde::Serialize;
+use crate::helpers::{create_file, mkdir, read_file, write_to_file};
 
 
 #[derive(Debug, Deserialize)]
@@ -29,6 +29,8 @@ pub struct ProjectStep {
     pub action: OSActions,
     pub path: String,
     pub value: String,
+    #[serde(rename = "isFilePath")]
+    pub is_file_path: Option<bool>
 }
 
 fn deserialize_action<'de, D>(deserializer: D) -> Result<OSActions, D::Error>
@@ -59,7 +61,25 @@ pub fn projects_root() -> std::path::PathBuf {
     dirs_next::document_dir().expect("Could not find the document dir").join("sketch").join("projects")
 }
 
-pub fn execute_manifest(project: ProjectManifest) -> bool {
+#[derive(Serialize, Clone)]
+#[serde(into = "u8")]
+pub enum ManifestResult {
+    ProjectOk = 0,
+    ErrorInvalidJson = 1,
+    ErrorCreatingDir = 2,
+    ErrorCreatingFile = 3,
+    ErrorWritingToFile = 4,
+    ErrorReadingFromFile = 5,
+}
+
+impl From<ManifestResult> for u8 {
+    fn from(res: ManifestResult) -> u8 {
+        res as u8
+    }
+}
+
+
+pub fn execute_manifest(project: ProjectManifest) -> ManifestResult {
     println!("Executing manifest: {}", project.name);
     let root = projects_root().join(project.language).join(project.category).join(project.name);
     for step in project.steps {
@@ -68,26 +88,38 @@ pub fn execute_manifest(project: ProjectManifest) -> bool {
             let res = mkdir(root.join(step.path));
             if res.is_err() { 
                 step_error(step.action); 
-                return false; 
+                return ManifestResult::ErrorCreatingDir; 
             }
         }
         OSActions::CreateFile => {
             let res = create_file(root.join(step.path), None);
             if res.is_err() { 
                 step_error(step.action); 
-                return false; 
+                return ManifestResult::ErrorCreatingFile; 
             }
         }
         OSActions::WriteToFile => {
-            let res = write_to_file(root.join(step.path), step.value);
+            let contents = if step.is_file_path.unwrap_or(false) {
+                match read_file(step.value.clone().into()) {
+                    Ok(data) => data,
+                    Err(err) => {
+                        eprintln!("Error reading {}: {}", step.value, err);
+                        return ManifestResult::ErrorReadingFromFile;
+                    }
+                }
+            } else {
+                step.value.clone()
+            };
+
+            let res = write_to_file(root.join(step.path), contents);
             if res.is_err() { 
                 step_error(step.action); 
-                return false; 
+                return ManifestResult::ErrorWritingToFile; 
             }
-      
+
             }
         } 
     }
 
-    true
+    ManifestResult::ProjectOk
 }

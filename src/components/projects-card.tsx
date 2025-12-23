@@ -17,12 +17,30 @@ import { invoke } from "@tauri-apps/api/core"
 import { Spinner } from "./ui/spinner"
 import { toast } from "sonner"
 
+enum ManifestResult {
+    ProjectOk,
+    ErrorInvalidJson,
+    ErrorCreatingDir,
+    ErrorCreatingFile,
+    ErrorWritingToFile,
+    ErrorReadingFromFile
+}
 
+function collectErrorMessage(error: ManifestResult){
+  switch(error){
+    case ManifestResult.ProjectOk: return "ok???";
+    case ManifestResult.ErrorInvalidJson: return "The provided JSON is not a valid manifest.";
+    case ManifestResult.ErrorCreatingDir: return "Error creating directory";
+    case ManifestResult.ErrorCreatingFile: return "Error creating file";
+    case ManifestResult.ErrorWritingToFile: return "Error writing to file";
+    case ManifestResult.ErrorReadingFromFile: return "Error reading from file";
+  }
+}
 
-async function handleNewProject(project: ProjectTemplate, name: string){
+async function handleNewProject(project: ProjectTemplate, name: string): Promise<ManifestResult> {
   const obj = project.manifest;
   obj.name = name;
-  const res = await invoke("new_project", { payload: JSON.stringify(obj)}) as boolean;
+  const res = await invoke("new_project", { payload: JSON.stringify(obj)}) as ManifestResult;
   return res 
 }
 
@@ -125,8 +143,9 @@ export const ProjectsCard = memo((props: ProjectsCardProps) => {
                 setLoading(true);
                 const res = await handleNewProject(props.project, name);
 
-                if (!res) {
-                  toast.error("Error creating your project.", { description: "Try again later." });
+                if (res !== ManifestResult.ProjectOk) {
+                  const err = collectErrorMessage(res);
+                  toast.error("Error creating your project.", { description: err});
                   setLoading(false);
                   return;
                 }

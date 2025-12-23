@@ -24,7 +24,8 @@ export enum OSActions {
 export interface ProjectStep {
   action: OSActions,
   path: string, 
-  value: string 
+  value: string, // string or filepath 
+  isFilePath?: boolean
 }
 
 export interface ProjectManifest {
