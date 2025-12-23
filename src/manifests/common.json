@@ -47,7 +47,7 @@
     "description": "An Assembly console program. Includes an entry point, system calls for writing to standard output, and a minimal executable layout.",
     "imagePath": "/assets/asm_prog.png",
     "category": "Console/Terminal",
-    "language": "Assembly",
+    "language": "Assembly x86",
     "manifest": {
       "name": "app",
       "language": "Assembly",
@@ -94,7 +94,7 @@
     "title": "GTK GUI Application",
     "description": "A GTK-based GUI application. Includes window creation, widget initialization, signal handling, and an active event loop.",
     "imagePath": "/assets/gtk_gui.png",
-    "category": "GUI",
+    "category": "Gui",
     "language": "C",
     "manifest": { "name": "app", "language": "C", "category": "gui", "steps": [] }
   },
