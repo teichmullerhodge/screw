@@ -52,7 +52,7 @@ export default function About() {
           variant="outline"
           size="sm"
           className="cursor-pointer"
-          onClick={() => window.open("https://github.com/your-repo/screw")}
+          onClick={() => window.open("https://github.com/teichmullerhoge/sketch")}
         >
         <img src={githubBrand} width={20} height={20} className="rounded"/>
         Github 
