@@ -29,6 +29,8 @@ export interface ProjectStep {
 
 export interface ProjectManifest {
   name: string,
+  language: string,
+  category: string,
   steps: Array<ProjectStep>
 }
  

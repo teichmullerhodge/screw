@@ -1,0 +1,112 @@
+[
+  {
+    "identifier": "C",
+    "title": "C Console Project",
+    "description": "A C project focused on console and terminal applications. Includes stdio.h and stdlib.h, a basic main function, argument handling, and a template that prints a message to standard output.",
+    "imagePath": "/assets/c_prog.png",
+    "category": "Console/Terminal",
+    "language": "C",
+    "manifest": {
+      "name": "app",
+      "language": "C",
+      "category": "terminal",
+      "steps": [
+        { "action": 0, "path": "build", "value": "" },
+        { "action": 0, "path": "src", "value": "" },
+        { "action": 1, "path": "src/main.c", "value": "" },
+        {
+          "action": 2,
+          "path": "src/main.c",
+          "value": "#include <stdio.h>\n\nint main(int argc, char **argv) {\n    (void)argc;\n    (void)argv;\n    printf(\"Hello, world!\");\n    return 0;\n}"
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "CPP",
+    "title": "C++ Console Project",
+    "description": "A C++ console project. Includes iostream, a basic main function, standard output usage, and a minimal structure for command-line execution.",
+    "imagePath": "/assets/cpp_prog.png",
+    "category": "Console/Terminal",
+    "language": "C++",
+    "manifest": {
+      "name": "app",
+      "language": "C++",
+      "category": "terminal",
+      "steps": [
+        { "action": 0, "path": "build", "value": "" },
+        { "action": 0, "path": "src", "value": "" },
+        { "action": 1, "path": "src/main.cpp", "value": "" },
+        {
+          "action": 2,
+          "path": "src/main.cpp",
+          "value": "#include <iostream>\n\nint main(int argc, char **argv) {\n    (void)argc;\n    (void)argv;\n    std::cout << \"Hello, world!\" << std::endl;\n    return 0;\n}"
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "Assembly",
+    "title": "Assembly Console Program",
+    "description": "An Assembly console program. Includes an entry point, system calls for writing to standard output, and a minimal executable layout.",
+    "imagePath": "/assets/asm_prog.png",
+    "category": "Console/Terminal",
+    "language": "Assembly",
+    "manifest": { "name": "app", "language": "Assembly", "category": "terminal", "steps": [] }
+  },
+  {
+    "identifier": "Ada",
+    "title": "Ada Console Project",
+    "description": "An Ada console project. Includes a main procedure, basic text output, and a minimal program structure for terminal execution.",
+    "imagePath": "/assets/ada_prog.png",
+    "category": "Console/Terminal",
+    "language": "Ada",
+    "manifest": { "name": "app", "language": "Ada", "category": "terminal", "steps": [] }
+  },
+  {
+    "identifier": "Rust",
+    "title": "Rust Console Project",
+    "description": "A Rust console project. Includes a main function, standard output printing, basic argument access, and a minimal executable structure.",
+    "imagePath": "/assets/rust_prog.png",
+    "category": "Console/Terminal",
+    "language": "Rust",
+    "manifest": { "name": "app", "language": "Rust", "category": "terminal", "steps": [] }
+  },
+  {
+    "identifier": "Zig",
+    "title": "Zig Console Project",
+    "description": "A Zig console project. Includes a main function, standard output printing, basic error handling, and a minimal build configuration.",
+    "imagePath": "/assets/zig_prog.png",
+    "category": "Console/Terminal",
+    "language": "Zig",
+    "manifest": { "name": "app", "language": "Zig", "category": "terminal", "steps": [] }
+  },
+  {
+    "identifier": "GTK",
+    "title": "GTK GUI Application",
+    "description": "A GTK-based GUI application. Includes window creation, widget initialization, signal handling, and an active event loop.",
+    "imagePath": "/assets/gtk_gui.png",
+    "category": "GUI",
+    "language": "C",
+    "manifest": { "name": "app", "language": "C", "category": "gui", "steps": [] }
+  },
+  {
+    "identifier": "OpenGL",
+    "title": "OpenGL Graphics Project",
+    "description": "An OpenGL graphics project. Includes context creation, a render loop, buffer initialization, and basic frame rendering.",
+    "imagePath": "/assets/opengl_graph.png",
+    "category": "Graphics",
+    "language": "C",
+    "manifest": { "name": "app", "language": "C", "category": "graphics", "steps": [] }
+  },
+  {
+    "identifier": "Raylib",
+    "title": "Raylib Game Project",
+    "description": "A Raylib graphics project. Includes window initialization, a render loop, basic drawing calls, and frame updates.",
+    "imagePath": "/assets/raylib_graph.png",
+    "category": "Games",
+    "language": "C",
+    "manifest": { "name": "app", "language": "C", "category": "games", "steps": [] }
+  }
+]
+

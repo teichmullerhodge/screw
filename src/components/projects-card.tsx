@@ -17,6 +17,8 @@ import { invoke } from "@tauri-apps/api/core"
 import { Spinner } from "./ui/spinner"
 import { toast } from "sonner"
 
+
+
 async function handleNewProject(project: ProjectTemplate, name: string){
   const obj = project.manifest;
   obj.name = name;

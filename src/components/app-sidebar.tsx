@@ -10,7 +10,7 @@ import {
 
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import sketchLogo from "../assets/sketch_logo.png"
+import sketchLogo from "/assets/sketch_logo.png"
 import { Button } from "./ui/button";
 
 interface SidebarOptions {
@@ -112,7 +112,7 @@ export function AppSidebar() {
     </TooltipProvider>
               <Button
                 onClick={() => setCollapsed(!collapsed)}
-                className="cursor-pointer p-0 m-0 flex flex-row justify-start" variant={"ghost"}>{collapsed ? (<ArrowRightToLine/>) : (<ArrowLeftToLine/>) }
+                className={`${collapsed && "w-[40px]"} cursor-pointer p-0 m-0 flex flex-row justify-start`} variant={"ghost"}>{collapsed ? (<ArrowRightToLine/>) : (<ArrowLeftToLine/>) }
         
               </Button>
             </div>

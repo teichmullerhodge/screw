@@ -1,5 +1,4 @@
 import { ProjectsCard } from "@/components/projects-card";
-import { PROJECT_TEMPLATE } from "@/lib/project/store";
 import {
   Select,
   SelectContent,
@@ -11,7 +10,8 @@ import { ProgrammingLanguages, ProjectCategories, ProjectTemplate } from "@/lib/
 import { useRef, useState } from "react";
 import { Grid2x2, Grid3X3, List, TableProperties } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import filterNothing from "../assets/filter_nothing.png";
+import filterNothing from "/assets/filter_nothing.png";
+import commonTemplates from "@/manifests/common.json" 
 
 
 interface ViewSelectionProps {
@@ -137,8 +137,9 @@ interface ProjectFilters {
 }
 
 export default function NewProject(){
+  const templates = commonTemplates as Array<ProjectTemplate>;
   const [view, setView] = useState<string>("grid grid-cols-4"); 
-  const [projects, setProjects] = useState<Array<ProjectTemplate>>(PROJECT_TEMPLATE);
+  const [projects, setProjects] = useState<Array<ProjectTemplate>>(templates);
   const filters = useRef<ProjectFilters>(
   {
       "language": "all",
@@ -153,12 +154,12 @@ export default function NewProject(){
   const applyFilters = () => {
     const f = filters.current;
     if(f.language === "all" && filters.current.category === "all") {
-      setProjects(PROJECT_TEMPLATE)
+      setProjects(templates)
       return;
     }
-    if(f.language === "all") return setProjects(PROJECT_TEMPLATE.filter((p) => p.category === f.category));
-    if(f.category === "all") return setProjects(PROJECT_TEMPLATE.filter((p) => p.language === f.language));
-    return setProjects(PROJECT_TEMPLATE.filter((p) => p.category === f.category && p.language === f.language));
+    if(f.language === "all") return setProjects(templates.filter((p) => p.category === f.category));
+    if(f.category === "all") return setProjects(templates.filter((p) => p.language === f.language));
+    return setProjects(templates.filter((p) => p.category === f.category && p.language === f.language));
   }
 
 

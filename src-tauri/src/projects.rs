@@ -42,6 +42,8 @@ where
 #[derive(Debug, Deserialize)]
 pub struct ProjectManifest {
     name: String,
+    language: String, 
+    category: String,
     steps: Vec<ProjectStep>
 }
 
@@ -59,7 +61,7 @@ pub fn projects_root() -> std::path::PathBuf {
 
 pub fn execute_manifest(project: ProjectManifest) -> bool {
     println!("Executing manifest: {}", project.name);
-    let root = projects_root().join(project.name);
+    let root = projects_root().join(project.language).join(project.category).join(project.name);
     for step in project.steps {
     match step.action {
         OSActions::Mkdir => {

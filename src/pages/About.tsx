@@ -1,7 +1,6 @@
-import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import githubBrand from "../assets/github_brand.png"
-import sketchLogo from "../assets/sketch_logo.png"
+import githubBrand from "/assets/github_brand.png"
+import sketchLogo from "/assets/sketch_logo.png"
 
 export default function About() {
   return (
@@ -18,7 +17,7 @@ export default function About() {
 
       <div className="max-w-3xl text-sm leading-relaxed">
         <p>
-          Screw is a desktop application designed to quickly bootstrap development
+          Sketch is a desktop application designed to quickly bootstrap development
           environments for systems, graphics, and low-level projects.
         </p>
         <p className="mt-2">
