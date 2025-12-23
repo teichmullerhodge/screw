@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-COMPILER=gcc
+COMPILER=g++
 CXXFLAGS="-Wall -Wextra -Werror -O3"
 LDFLAGS=""
 
@@ -13,9 +13,9 @@ mkdir -p $BUILD_DIR
 
 OBJ_FILES=""
 PIDS=()
-HEADERS=$(find $SRC_DIR -name '*.h')
+HEADERS=$(find $SRC_DIR -name '*.hpp')
 
-for file in $(find $SRC_DIR -name '*.c'); do
+for file in $(find $SRC_DIR -name '*.cpp'); do
   obj_file="$BUILD_DIR/$(basename "${file%.c}.o")"
   OBJ_FILES="$OBJ_FILES $obj_file"
 

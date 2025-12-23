@@ -20,7 +20,7 @@
     ]
   }
   },
-  {
+ {
     "identifier": "CPP",
     "title": "C++ Console Project",
     "description": "A C++ console project. Includes iostream, a basic main function, standard output usage, and a minimal structure for command-line execution.",
@@ -35,22 +35,32 @@
         { "action": 0, "path": "build", "value": "" },
         { "action": 0, "path": "src", "value": "" },
         { "action": 1, "path": "src/main.cpp", "value": "" },
-        {
-          "action": 2,
-          "path": "src/main.cpp",
-          "value": "#include <iostream>\n\nint main(int argc, char **argv) {\n    (void)argc;\n    (void)argv;\n    std::cout << \"Hello, world!\" << std::endl;\n    return 0;\n}"
-        }
+        { "action": 1, "path": "cc.sh", "value": "" },
+        { "action": 2, "path": "src/main.cpp", "value": "templates/CPP/main.cpp", "isFilePath": true },
+        { "action": 2, "path": "cc.sh", "value": "templates/CPP/cc.sh", "isFilePath": true }
       ]
     }
   },
-  {
+{
     "identifier": "Assembly",
-    "title": "Assembly Console Program",
+    "title": "Assembly Console Project",
     "description": "An Assembly console program. Includes an entry point, system calls for writing to standard output, and a minimal executable layout.",
     "imagePath": "/assets/asm_prog.png",
     "category": "Console/Terminal",
     "language": "Assembly",
-    "manifest": { "name": "app", "language": "Assembly", "category": "terminal", "steps": [] }
+    "manifest": {
+      "name": "app",
+      "language": "Assembly",
+      "category": "terminal",
+      "steps": [
+        { "action": 0, "path": "build", "value": "" },
+        { "action": 0, "path": "src", "value": "" },
+        { "action": 1, "path": "src/main.asm", "value": "" },
+        { "action": 1, "path": "cc.sh", "value": "" },
+        { "action": 2, "path": "src/main.asm", "value": "templates/Assembly/main.asm", "isFilePath": true },
+        { "action": 2, "path": "cc.sh", "value": "templates/Assembly/cc.sh", "isFilePath": true }
+      ]
+    }
   },
   {
     "identifier": "Ada",
