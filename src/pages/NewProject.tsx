@@ -12,6 +12,7 @@ import { Grid2x2, Grid3X3, List, TableProperties } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import filterNothing from "/assets/filter_nothing.png";
 import commonTemplates from "@/manifests/common.json" 
+import { motion, AnimatePresence } from "framer-motion";
 
 
 interface ViewSelectionProps {
@@ -185,8 +186,24 @@ export default function NewProject(){
               />
               </div>
             </div>
-            <div className={`${projects.length !== 0 && view} ${projects.length === 0 && "grid grid-cols-1"} gap-2 overflow-x-hidden overflow-y-auto m-2`}>
-              {projects.length === 0 ? (<NothingFound message="No template found that match the filters." imagePath={filterNothing}/>) : projects.map((project) => <ProjectsCard project={project}/>)}
-            </div>
-          </div>)
+          <div className={`${projects.length !== 0 && view} ${projects.length === 0 && "grid grid-cols-1"} gap-2 overflow-x-hidden overflow-y-auto m-2`}>
+            {projects.length === 0 ? (
+              <NothingFound message="No template found that match the filters." imagePath={filterNothing}/>
+            ) : (
+                <AnimatePresence>
+                  {projects.map((project) => (
+                    <motion.div
+                    key={project.identifier} 
+                    layout
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.2 }}
+                >
+                  <ProjectsCard project={project} />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+  )}
+</div>          </div>)
 }
