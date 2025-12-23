@@ -32,9 +32,10 @@ export const ProjectsCard = memo((props: ProjectsCardProps) => {
 
   const [name, setName] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false); 
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <form>
         <DialogTrigger asChild>
           <button
@@ -114,22 +115,24 @@ export const ProjectsCard = memo((props: ProjectsCardProps) => {
               </Button>
             </DialogClose>
 
-            <Button
-              type="submit"
-              onClick={async () => {
+            <Button type="submit" onClick={async () => {
+                if(name.trim() === "") {
+                  toast.message("Type a name for your project.");
+                  return;
+                }
                 setLoading(true);
                 const res = await handleNewProject(props.project, name);
-                if(!res){ 
+
+                if (!res) {
                   toast.error("Error creating your project.", { description: "Try again later." });
                   setLoading(false);
-                  return false;  
-                }  
-              
+                  return;
+                }
+
                 toast.message("Project successfully created.");
                 setLoading(false);
-
-              }}
-            >
+                setOpen(false);
+            }}>
               Create project {loading && <Spinner/>}
             </Button>
           </DialogFooter>
