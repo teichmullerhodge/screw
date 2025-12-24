@@ -42,16 +42,18 @@ export default function Settings() {
 
   const handleSaveSettings = () => {
     localStorage.setItem("user-settings", JSON.stringify(settings));
+    localStorage.setItem("collapsed-sidebar", settings.sidebarCollapsed ? "T" : "F");
+    localStorage.setItem("open-project-after-creation", settings.openProjectAfterCreation ? "T" : "F");
     toast.success("Settings saved.");
   };
 
   return (
     <div className="flex min-h-screen">
-      <div className="w-1/2 p-8 bg-white">
+      <div className="w-1/2 p-2 bg-white">
         <div className="max-w-xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold tracking-tight">Configurations</h1>
-            <p className="text-sm text-muted-foreground mt-1">
+          <div className="mb-2">
+            <h2>Configurations</h2>
+            <p className="text-sm text-muted-foreground mt-1 text-[14px]">
               Manage your preferences and application settings
             </p>
           </div>
@@ -118,7 +120,7 @@ export default function Settings() {
                   <div className="space-y-0.5">
                     <Label htmlFor="sidebarCollapsed">Sidebar collapsed</Label>
                     <p className="text-xs text-muted-foreground">
-                      Show sidebar collapsed
+                      Show sidebar collapsed as default
                     </p>
                   </div>
                   <Switch
@@ -135,6 +137,8 @@ export default function Settings() {
             <div className="flex items-center justify-between pt-6 border-t">
               <Button variant="outline" type="button" onClick={() => {
                 localStorage.removeItem("user-settings")
+                localStorage.removeItem("collapsed-sidebar");
+                localStorage.removeItem("open-project-after-creation");
                 setSettings(DEFAULT_SETTINGS);
                 toast.message("Settings restored.");
               }}>

@@ -56,7 +56,7 @@ const items: Array<SidebarOptions> = [
 export function AppSidebar() {
   const navigator = useNavigate();
   const location = useLocation();
-  const [collapsed, setCollapsed] = useState<boolean>(false);
+  const [collapsed, setCollapsed] = useState<boolean>(localStorage.getItem("collapsed-sidebar") === "T");
 
   const handleNavigation = (item: SidebarOptions) => {
       if(item.active) return navigator(item.url);
