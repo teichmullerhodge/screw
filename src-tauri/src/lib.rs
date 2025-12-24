@@ -4,6 +4,8 @@ use tauri_plugin_opener::OpenerExt;
 pub mod projects; 
 pub mod helpers;
 
+
+
 #[tauri::command]
 fn new_project(app: tauri::AppHandle, payload: &str) -> projects::ManifestOperation {
     println!("Starting new project.");

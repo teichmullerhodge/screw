@@ -39,20 +39,19 @@ const items: Array<SidebarOptions> = [
     icon: FileDown,
     active: false,
   },
- 
+  {
+    title: "Settings",
+    url: "/settings",
+    icon: Settings,
+    active: true,
+  },
   {
     title: "About",
     url: "/about",
     icon: Info,
     active: true,
   },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-    active: false,
-  },
-]
+ ]
 
 export function AppSidebar() {
   const navigator = useNavigate();

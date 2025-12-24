@@ -7,6 +7,7 @@ import About from "./pages/About";
 import AppHeader from "./layout/app-header";
 import EntryPoint from "./pages/EntryPoint";
 import Projects from "./pages/Projects";
+import Settings from "./pages/Settings";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -52,7 +53,20 @@ function AnimatedRoutes() {
               <Projects />
             </motion.div>
           }
-        />  
+        /> 
+        <Route
+          path="/settings"
+          element={
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -50 }}
+              transition={{ duration: DEFAULT_ANIMATION_DURATION }}
+            >
+             <Settings/> 
+            </motion.div>
+          }
+        />   
         <Route
           path="/about"
           element={
