@@ -77,7 +77,7 @@ export const UserProjectsCard = memo((props: UserProjectsCardProps) => {
         <span>•</span>
         <span>
           Updated at{" "}
-          {new Date(props.project.updatedAt).toLocaleDateString()}
+          {new Date(props.project.updated_at).toLocaleDateString()}
         </span>
       </div>
     </div>

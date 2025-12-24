@@ -9,7 +9,7 @@
   "manifest": {
     "name": "app",
     "language": "C",
-    "category": "terminal",
+    "category": "Console/Terminal",
     "steps": [
       { "action": 0, "path": "build", "value": "" },
       { "action": 0, "path": "src", "value": "" },
@@ -35,7 +35,7 @@
     "manifest": {
       "name": "app",
       "language": "C++",
-      "category": "terminal",
+      "category": "Console/Terminal",
       "steps": [
         { "action": 0, "path": "build", "value": "" },
         { "action": 0, "path": "src", "value": "" },
@@ -60,8 +60,8 @@
     "language": "Assembly x86",
     "manifest": {
       "name": "app",
-      "language": "Assembly",
-      "category": "terminal",
+      "language": "Assembly x86",
+      "category": "Console/Terminal",
       "steps": [
         { "action": 0, "path": "build", "value": "" },
         { "action": 0, "path": "src", "value": "" },
@@ -84,7 +84,7 @@
     "imagePath": "/assets/ada_prog.png",
     "category": "Console/Terminal",
     "language": "Ada",
-    "manifest": { "name": "app", "language": "Ada", "category": "terminal", "steps": [] }
+    "manifest": { "name": "app", "language": "Ada", "category": "Console/Terminal", "steps": [] }
   },
   {
     "identifier": "Rust",
@@ -93,7 +93,7 @@
     "imagePath": "/assets/rust_prog.png",
     "category": "Console/Terminal",
     "language": "Rust",
-    "manifest": { "name": "app", "language": "Rust", "category": "terminal", "steps": [] }
+    "manifest": { "name": "app", "language": "Rust", "category": "Console/Terminal", "steps": [] }
   },
   {
     "identifier": "Zig",
@@ -102,7 +102,7 @@
     "imagePath": "/assets/zig_prog.png",
     "category": "Console/Terminal",
     "language": "Zig",
-    "manifest": { "name": "app", "language": "Zig", "category": "terminal", "steps": [] }
+    "manifest": { "name": "app", "language": "Zig", "category": "Console/Terminal", "steps": [] }
   },
   {
     "identifier": "GTK",
@@ -111,7 +111,7 @@
     "imagePath": "/assets/gtk_gui.png",
     "category": "Gui",
     "language": "C",
-    "manifest": { "name": "app", "language": "C", "category": "gui", "steps": [] }
+    "manifest": { "name": "app", "language": "C", "category": "Gui", "steps": [] }
   },
   {
     "identifier": "OpenGL",
@@ -120,7 +120,7 @@
     "imagePath": "/assets/opengl_graph.png",
     "category": "Graphics",
     "language": "C",
-    "manifest": { "name": "app", "language": "C", "category": "graphics", "steps": [] }
+    "manifest": { "name": "app", "language": "C", "category": "Graphics", "steps": [] }
   },
   {
     "identifier": "Raylib",
@@ -129,7 +129,7 @@
     "imagePath": "/assets/raylib_graph.png",
     "category": "Games",
     "language": "C",
-    "manifest": { "name": "app", "language": "C", "category": "games", "steps": [] }
+    "manifest": { "name": "app", "language": "C", "category": "Games", "steps": [] }
   }
 ]
 

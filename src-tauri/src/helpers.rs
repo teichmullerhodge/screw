@@ -63,6 +63,22 @@ pub fn write_to_file(path: PathBuf, contents: String) -> Result<(), Box<dyn std:
     Ok(())
 }
 
+pub fn dir_size(path: &std::path::Path) -> std::io::Result<u64> {
+    let mut size = 0;
+
+    for entry in std::fs::read_dir(path)? {
+        let entry = entry?;
+        let meta = entry.metadata()?;
+
+        if meta.is_dir() {
+            size += dir_size(&entry.path())?;
+        } else {
+            size += meta.len();
+        }
+    }
+
+    Ok(size)
+}
 
 pub fn now_ms() -> i64 {
     SystemTime::now()

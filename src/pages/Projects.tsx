@@ -1,15 +1,20 @@
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Grid2x2, Grid3X3, List } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import filterNothing from "/assets/filter_nothing.png";
 import { motion, AnimatePresence } from "framer-motion";
-import { mockUserProjects, UserProjectTemplate } from "@/lib/user-projects/interfaces";
+import { UserProjectTemplate } from "@/lib/user-projects/interfaces";
 import ViewSelection from "@/components/projects/view-selection";
 import { ProgrammingLanguagesSelection } from "@/components/projects/programming-languages-selection";
 import { CategoriesSelection } from "@/components/projects/categories-selection";
 import NothingFound from "@/components/nothing-found";
 import { UserProjectsCard } from "@/components/projects/user-projects-card";
+import { invoke } from "@tauri-apps/api/core";
+
+import noProjectYet from "/assets/no_project_yet.png";
+
+import { toast } from "sonner";
 
 const PROJECT_VIEWS = ["List", "Grid 2x2", "Grid 3x3"];
 const CSS_VIEW_RECORD: Record<string, string> = {
@@ -25,14 +30,25 @@ interface ProjectFilters {
 }
 
 export default function Projects(){
-  const templates = mockUserProjects;
   const [view, setView] = useState<string>("grid grid-cols-3"); 
-  const [userProjects, setUserProjects] = useState<Array<UserProjectTemplate>>(templates);
+  const [userProjects, setUserProjects] = useState<Array<UserProjectTemplate>>([]);
+  const projectsRef = useRef<Array<UserProjectTemplate>>([]);
   const filters = useRef<ProjectFilters>(
   {
       "language": "all",
       "category": "all"
   });
+
+  useEffect(() => {
+    const collect_projects = async () => {
+      const res = await invoke("read_projects") as Array<UserProjectTemplate>;
+      setUserProjects(res);
+      projectsRef.current = res;
+    }
+ 
+   collect_projects();
+  
+  }, [])
 
   const handleProjectsFilter = (value: string, key: keyof ProjectFilters) => {
     filters.current[key] = value; 
@@ -42,12 +58,12 @@ export default function Projects(){
   const applyFilters = () => {
     const f = filters.current;
     if(f.language === "all" && filters.current.category === "all") {
-      setUserProjects(templates)
+      setUserProjects(projectsRef.current)
       return;
     }
-    if(f.language === "all") return setUserProjects(templates.filter((p) => p.category === f.category));
-    if(f.category === "all") return setUserProjects(templates.filter((p) => p.language === f.language));
-    return setUserProjects(templates.filter((p) => p.category === f.category && p.language === f.language));
+    if(f.language === "all") return setUserProjects(projectsRef.current.filter((p) => p.category === f.category));
+    if(f.category === "all") return setUserProjects(projectsRef.current.filter((p) => p.language === f.language));
+    return setUserProjects(projectsRef.current.filter((p) => p.category === f.category && p.language === f.language));
   }
 
 
@@ -78,7 +94,7 @@ export default function Projects(){
             </div>
           <div className={`${userProjects.length !== 0 && view} ${userProjects.length === 0 && "grid grid-cols-1"} gap-2 overflow-x-hidden overflow-y-auto m-2`}>
             {userProjects.length === 0 ? (
-              <NothingFound message="No template found that match the filters." imagePath={filterNothing}/>
+              <NothingFound message={projectsRef.current.length > 0 ? `No project found that match the filters.` : `You don't have projects yet.`} imagePath={ projectsRef.current.length > 0 ? filterNothing : noProjectYet}/>
             ) : (
                 <AnimatePresence>
                   {userProjects.map((project, idx) => (
@@ -94,6 +110,8 @@ export default function Projects(){
                   </motion.div>
                 ))}
               </AnimatePresence>
-  )}
-</div>          </div>)
+              )}
+          </div>          
+      </div>)
 }
+
