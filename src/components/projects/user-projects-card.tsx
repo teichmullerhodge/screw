@@ -14,6 +14,8 @@ import { UserProjectTemplate } from "@/lib/user-projects/interfaces"
 import { formatSize } from "@/helpers/formatter"
 import { solveImageFromCategory, solveImageFromLanguage } from "@/lib/project/utils"
 import { Spinner } from "../ui/spinner"
+import { invoke } from "@tauri-apps/api/core"
+import { toast } from "sonner"
 
 
 interface UserProjectsCardProps {
@@ -120,7 +122,13 @@ export const UserProjectsCard = memo((props: UserProjectsCardProps) => {
               </Button>
             </DialogClose>
 
-            <Button type="submit" onClick={async () => {}}>
+            <Button type="submit" onClick={async () => {
+              const opened = await invoke("open_project_folder", { path: props.project.path });
+              if(!opened) {
+                toast.error(`Error opening path: ${props.project.path}`, { description: "The path exists?" });
+                return;
+              }
+            }}>
               Open project {loading && <Spinner/>}
             </Button>
           </DialogFooter>

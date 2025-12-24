@@ -1,4 +1,5 @@
 use crate::projects::{ collect_user_projects, execute_manifest };
+use tauri_plugin_opener::OpenerExt;
 
 pub mod projects; 
 pub mod helpers;
@@ -24,12 +25,20 @@ fn read_projects() -> Vec<projects::UserProjectManifestResult> {
 }
 
 
+// the path come from the frontend as language/category/project-name, it should
+// be joined here
+#[tauri::command] 
+fn open_project_folder(app: tauri::AppHandle, path: String) -> bool {
+    let res = app.opener().open_path(path, None::<&str>); // is this right?
+    res.is_ok()
+}
+
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![new_project, read_projects])
+        .invoke_handler(tauri::generate_handler![new_project, read_projects, open_project_folder])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

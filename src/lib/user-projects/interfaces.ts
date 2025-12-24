@@ -13,5 +13,6 @@ export interface UserProjectTemplate {
   size: number,
   category: UserProjectCategories | null,
   language: UserProgrammingLanguages,
+  path: string,
 }
 

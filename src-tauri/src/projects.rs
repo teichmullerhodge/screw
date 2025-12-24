@@ -94,7 +94,8 @@ pub struct UserProjectManifest {
     created_at: i64,
     updated_at: i64, 
     category: String, 
-    language: String 
+    language: String,
+    path: String 
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -106,7 +107,7 @@ pub struct UserProjectManifestResult {
 
 
 
-pub fn build_manifest_json(project: &ProjectManifest) -> UserProjectManifest {
+pub fn build_manifest_json(project: &ProjectManifest, path: String) -> UserProjectManifest {
     let now = now_ms();
     UserProjectManifest {
         name: project.name.clone(), 
@@ -114,7 +115,8 @@ pub fn build_manifest_json(project: &ProjectManifest) -> UserProjectManifest {
         created_at: now, 
         updated_at: now, 
         category: project.category.clone(),
-        language: project.language.clone()
+        language: project.language.clone(),
+        path: path
     }
 }
 
@@ -234,8 +236,8 @@ const SKETCH_MANIFEST_FILE: &str = ".sketch.manifest.json";
 
 pub fn execute_manifest(app: tauri::AppHandle, project: ProjectManifest) -> ManifestOperation {
     println!("Executing manifest: {}", project.name);
-    let user_manifest = build_manifest_json(&project);    
-    let root = projects_root().join(project.language).join(project.category).join(project.name);
+    let root = projects_root().join(project.language.clone()).join(project.category.clone()).join(project.name.clone());
+    let user_manifest = build_manifest_json(&project, root.display().to_string());    
     for step in project.steps {
     match step.action {
         OSActions::Mkdir => {

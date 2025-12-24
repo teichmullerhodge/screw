@@ -1,5 +1,5 @@
-import { UserProgrammingLanguages, UserProjectCategories } from "../user-projects/interfaces";
-import { ProgrammingLanguages, ProjectCategories } from "./interfaces";
+import { UserProgrammingLanguages, UserProjectCategories, UserProjectTemplate } from "../user-projects/interfaces";
+import { ProgrammingLanguages, ProjectCategories, ProjectTemplate } from "./interfaces";
 
 import ada from "/assets/ada_prog.png";
 import asm from "/assets/asm_prog.png";
