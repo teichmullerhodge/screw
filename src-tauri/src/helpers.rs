@@ -1,7 +1,7 @@
 use std::io::Write;
 use std::path::PathBuf;
 use tauri::{AppHandle, Manager};
-
+use std::time::{SystemTime, UNIX_EPOCH};
 
 pub fn mkdir(path: PathBuf) -> Result<(), std::io::Error> {
     if let Err(e) = std::fs::create_dir_all(&path) {
@@ -61,5 +61,13 @@ pub fn write_to_file(path: PathBuf, contents: String) -> Result<(), Box<dyn std:
     }
 
     Ok(())
+}
+
+
+pub fn now_ms() -> i64 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_millis() as i64
 }
 

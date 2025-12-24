@@ -1,5 +1,7 @@
 use serde::Deserialize;
 use serde::Serialize;
+use serde_json::json;
+use crate::helpers::now_ms;
 use crate::helpers::read_template;
 use crate::helpers::{create_file, mkdir, write_to_file};
 
@@ -79,9 +81,24 @@ impl From<ManifestResult> for u8 {
     }
 }
 
+pub fn build_manifest_json(project: &ProjectManifest) -> serde_json::Value {
+    let now = now_ms();
+    json!({
+        "name": project.name,
+        "author": "", // TODO
+        "createdAt": now,
+        "updatedAt": now,
+        "category": project.category,
+        "language": project.language
+
+    })
+}
+
+const SKETCH_MANIFEST_FILE: &str = ".sketch.manifest.json";
 
 pub fn execute_manifest(app: tauri::AppHandle, project: ProjectManifest) -> ManifestResult {
     println!("Executing manifest: {}", project.name);
+    let user_manifest = build_manifest_json(&project);    
     let root = projects_root().join(project.language).join(project.category).join(project.name);
     for step in project.steps {
     match step.action {
@@ -121,6 +138,15 @@ pub fn execute_manifest(app: tauri::AppHandle, project: ProjectManifest) -> Mani
             }
         } 
     }
+    // everything is okay. Let's write the manifest in the root of the project. 
+    let res = create_file(root.join(SKETCH_MANIFEST_FILE), None);
+    if res.is_err() {
+        eprintln!("Error creating the manifest file.");
+    }
 
+    let wr = write_to_file(root.join(SKETCH_MANIFEST_FILE), serde_json::to_string_pretty(&user_manifest).unwrap_or(user_manifest.to_string()));
+    if wr.is_err() {
+      eprintln!("Error writing to the manifest file.");   
+    }
     ManifestResult::ProjectOk
 }
