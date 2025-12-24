@@ -1,127 +1,15 @@
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { ProgrammingLanguages, ProjectCategories } from "@/lib/project/interfaces";
+
 import { useRef, useState } from "react";
 import { Grid2x2, Grid3X3, List } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import filterNothing from "/assets/filter_nothing.png";
 import { motion, AnimatePresence } from "framer-motion";
 import { mockUserProjects, UserProjectTemplate } from "@/lib/user-projects/interfaces";
-import { UserProjectsCard } from "@/components/user-projects-card";
-
-
-interface ViewSelectionProps {
-  onValueChange: (view: string) => void 
-}
-
-function ViewSelection(props: ViewSelectionProps) {
-   const views: Array<string> = PROJECT_VIEWS;
-   const viewsIcon = [<List/>, <Grid2x2/>, <Grid3X3/>]; 
-
-   return (
-    <Select onValueChange={(v) => props.onValueChange(v)} defaultValue={PROJECT_VIEWS[3]}>
-      <SelectTrigger className="focus:ring-0 focus:ring-offset-0 w-[150px]">
-        <SelectValue placeholder="View" />
-      </SelectTrigger>
-
-      <SelectContent
-        position="popper"
-        side="bottom"
-        sideOffset={4}
-        className="max-h-60"
-      >
-      {views.map((c, idx) => (
-          <SelectItem key={c} value={c}>
-            {viewsIcon[idx]} {c}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
-  );
-}
-
-
-interface CategoriesSelectionProps {
-  onValueChange: (v: string) => void
-}
-
-function CategoriesSelection(props: CategoriesSelectionProps) {
-  const categories = Object.values(ProjectCategories);
-
-  return (
-    <Select onValueChange={(v) => props.onValueChange(v)}>
-      <SelectTrigger className="focus:ring-0 focus:ring-offset-0 w-[150px]">
-        <SelectValue placeholder="Category" />
-      </SelectTrigger>
-
-      <SelectContent
-        position="popper"
-        side="bottom"
-        sideOffset={4}
-        className="max-h-60"
-      >
-      <SelectItem key={"all"} value={"all"}>
-          All
-      </SelectItem>
-      {categories.map((c) => (
-          <SelectItem key={c} value={c}>
-            {c}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
-  );
-}
-
-interface ProgrammingLanguagesSelectionProps {
-  onValueChange: (v: string) => void
-}
-
-function ProgrammingLanguagesSelection(props: ProgrammingLanguagesSelectionProps) {
-  const languages = Object.values(ProgrammingLanguages)
-   return (
-    <Select onValueChange={(v) => props.onValueChange(v)}>
-      <SelectTrigger className="focus:ring-0 focus:ring-offset-0 w-[150px]">
-        <SelectValue placeholder="Language" />
-      </SelectTrigger>
-
-      <SelectContent
-        position="popper"
-        side="bottom"
-        sideOffset={4}
-        className="max-h-60"
-      >
-        <SelectItem key={"all"} value={"all"}>
-            All
-        </SelectItem>
-        {languages.map((l) => (
-          <SelectItem key={l} value={l}>
-            {l}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
-  );
-}
-
-interface NothingFoundProps {
-  message: string, 
-  imagePath: string 
-}
-
-function NothingFound(props: NothingFoundProps) {
-  return (
-          <div className="flex flex-col items-center justify-center mt-10">
-              <img src={props.imagePath} width={250} height={250} className="opacity-50"/>
-              <span>{props.message}</span>
-          </div>
-         )
-}
+import ViewSelection from "@/components/projects/view-selection";
+import { ProgrammingLanguagesSelection } from "@/components/projects/programming-languages-selection";
+import { CategoriesSelection } from "@/components/projects/categories-selection";
+import NothingFound from "@/components/nothing-found";
+import { UserProjectsCard } from "@/components/projects/user-projects-card";
 
 const PROJECT_VIEWS = ["List", "Grid 2x2", "Grid 3x3"];
 const CSS_VIEW_RECORD: Record<string, string> = {
@@ -176,6 +64,9 @@ export default function Projects(){
               <div className="flex flex-row gap-2">
               <ViewSelection 
                 onValueChange={(v) => setView(CSS_VIEW_RECORD[v])}
+                views={PROJECT_VIEWS}
+                viewsIcon={[<List/>, <Grid2x2/>, <Grid3X3/>]}
+                defaultValue={PROJECT_VIEWS[3]}
               /> 
               <ProgrammingLanguagesSelection
                 onValueChange={(l) => handleProjectsFilter(l, "language")}

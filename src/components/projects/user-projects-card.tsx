@@ -9,11 +9,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { memo, useState } from "react"
-import { Spinner } from "./ui/spinner"
 import { UserProjectTemplate } from "@/lib/user-projects/interfaces"
 
 import { formatSize } from "@/helpers/formatter"
 import { solveImageFromCategory, solveImageFromLanguage } from "@/lib/project/utils"
+import { Spinner } from "../ui/spinner"
 
 
 interface UserProjectsCardProps {
@@ -22,7 +22,6 @@ interface UserProjectsCardProps {
 
 export const UserProjectsCard = memo((props: UserProjectsCardProps) => {
 
-  const [name, setName] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false); 
 

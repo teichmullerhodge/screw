@@ -14,10 +14,10 @@ import { Label } from "@/components/ui/label"
 import { ProjectTemplate } from "@/lib/project/interfaces"
 import { memo, useState } from "react"
 import { invoke } from "@tauri-apps/api/core"
-import { Spinner } from "./ui/spinner"
 import { toast } from "sonner"
 import { solveImageFromCategory } from "@/lib/project/utils"
 import { BadgeCheck } from "lucide-react"
+import { Spinner } from "../ui/spinner"
 
 enum ManifestResult {
     ProjectOk,
