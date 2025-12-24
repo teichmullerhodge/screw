@@ -8,6 +8,7 @@ import AppHeader from "./layout/app-header";
 import EntryPoint from "./pages/EntryPoint";
 import Projects from "./pages/Projects";
 import Settings from "./pages/Settings";
+import Filters from "./pages/Filters";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -54,6 +55,22 @@ function AnimatedRoutes() {
             </motion.div>
           }
         /> 
+   
+     <Route
+          path="/filters"
+          element={
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -50 }}
+              transition={{ duration: DEFAULT_ANIMATION_DURATION }}
+            >
+              <Filters />
+            </motion.div>
+          }
+        /> 
+    
+
         <Route
           path="/settings"
           element={

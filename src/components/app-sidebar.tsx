@@ -1,4 +1,4 @@
-import { ArrowLeftToLine, ArrowRightToLine, FileDown, Inbox, Info, LucideProps, Plus, Settings  } from "lucide-react"
+import { ArrowLeftToLine, ArrowRightToLine, FileDown, Inbox, Info, ListFilterPlus, LucideProps, Plus, Settings  } from "lucide-react"
 import react, { useState } from "react";
 
 import {
@@ -39,6 +39,12 @@ const items: Array<SidebarOptions> = [
     icon: FileDown,
     active: false,
   },
+  {
+    title: "Filters",
+    url: "/filters",
+    icon: ListFilterPlus,
+    active: true,
+  }, 
   {
     title: "Settings",
     url: "/settings",

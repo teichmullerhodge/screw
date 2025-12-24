@@ -46,7 +46,7 @@ export const UserProjectsCard = memo((props: UserProjectsCardProps) => {
       decoding="async"
       draggable={false}
       alt=""
-      className="w-9 h-9 object-cover rounded bg-white shrink-0"
+      className="w-9 h-9 object-cover rounded bg-transparent shrink-0"
     />
 
     <div className="flex flex-col gap-1 min-w-0 flex-1">
@@ -91,7 +91,7 @@ export const UserProjectsCard = memo((props: UserProjectsCardProps) => {
               <img
                 src={solveImageFromLanguage(props.project.language) || undefined}
                 alt=""
-                className="w-10 h-10 rounded bg-white"
+                className="w-10 h-10 rounded bg-transparent"
               />
 
               <div className="flex flex-col">

@@ -78,7 +78,7 @@ export const ProjectsCard = memo((props: ProjectsCardProps) => {
                 decoding="async"
                 draggable={false}
                 alt=""
-                className="w-8 h-8 object-cover rounded bg-white"
+                className="w-8 h-8 object-cover rounded bg-transparent"
               />
 
               <span className="text-sm font-medium truncate">
@@ -116,7 +116,7 @@ export const ProjectsCard = memo((props: ProjectsCardProps) => {
               <img
                 src={props.project.imagePath}
                 alt=""
-                className="w-10 h-10 rounded bg-white"
+                className="w-10 h-10 rounded bg-transparent"
               />
 
               <div className="flex flex-col">
