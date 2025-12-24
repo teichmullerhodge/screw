@@ -5,6 +5,8 @@ import NewProject from "./pages/NewProject";
 import Layout from "./layout/layout";
 import About from "./pages/About";
 import AppHeader from "./layout/app-header";
+import EntryPoint from "./pages/EntryPoint";
+import Projects from "./pages/Projects";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -12,6 +14,19 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
+        <Route
+          path="/"
+          element={
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -50 }}
+              transition={{ duration: DEFAULT_ANIMATION_DURATION }}
+            >
+              <EntryPoint />
+            </motion.div>
+          }
+        /> 
         <Route
           path="/new-project"
           element={
@@ -25,6 +40,19 @@ function AnimatedRoutes() {
             </motion.div>
           }
         />
+        <Route
+          path="/projects"
+          element={
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -50 }}
+              transition={{ duration: DEFAULT_ANIMATION_DURATION }}
+            >
+              <Projects />
+            </motion.div>
+          }
+        />  
         <Route
           path="/about"
           element={
@@ -44,6 +72,7 @@ function AnimatedRoutes() {
 }
 
 export default function App() {
+
   return (
     <BrowserRouter>
       <AppHeader title="Sketch">

@@ -18,6 +18,11 @@
       { "action": 2, "path": "src/main.c", "value": "resources/templates/C/main.c", "isFilePath": true },
       { "action": 2, "path": "cc.sh", "value": "resources/templates/C/cc.sh", "isFilePath": true }
     ]
+  },
+  "metadata": {
+    "author": "sketch",
+    "version": "0.1",
+    "verified": true 
   }
   },
  {
@@ -39,9 +44,14 @@
         { "action": 2, "path": "src/main.cpp", "value": "resources/templates/CPP/main.cpp", "isFilePath": true },
         { "action": 2, "path": "cc.sh", "value": "resources/templates/CPP/cc.sh", "isFilePath": true }
       ]
+    },
+    "metadata": {
+    "author": "sketch",
+    "version": "0.1",
+    "verified": true 
     }
   },
-{
+  {
     "identifier": "Assembly",
     "title": "Assembly Console Project",
     "description": "An Assembly console program. Includes an entry point, system calls for writing to standard output, and a minimal executable layout.",
@@ -60,7 +70,12 @@
         { "action": 2, "path": "src/main.asm", "value": "resources/templates/Assembly/main.asm", "isFilePath": true },
         { "action": 2, "path": "cc.sh", "value": "resources/templates/Assembly/cc.sh", "isFilePath": true }
       ]
-    }
+    },
+  "metadata": {
+    "author": "sketch",
+    "version": "0.1",
+    "verified": true 
+  }
   },
   {
     "identifier": "Ada",

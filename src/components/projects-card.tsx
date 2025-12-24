@@ -16,6 +16,8 @@ import { memo, useState } from "react"
 import { invoke } from "@tauri-apps/api/core"
 import { Spinner } from "./ui/spinner"
 import { toast } from "sonner"
+import { solveImageFromCategory } from "@/lib/project/utils"
+import { BadgeCheck } from "lucide-react"
 
 enum ManifestResult {
     ProjectOk,
@@ -46,6 +48,7 @@ async function handleNewProject(project: ProjectTemplate, name: string): Promise
 
 interface ProjectsCardProps {
   project: ProjectTemplate
+  isListView: boolean 
 }
 
 export const ProjectsCard = memo((props: ProjectsCardProps) => {
@@ -60,26 +63,50 @@ export const ProjectsCard = memo((props: ProjectsCardProps) => {
         <DialogTrigger asChild>
           <button
             type="button"
-            className="
-              w-full flex items-center gap-3
-              rounded-md border p-3
+            className={`
+              w-full flex ${props.isListView ? "flex-row" : "flex-col"} gap-3
+              rounded-md border p-2
               cursor-pointer
               hover:bg-accent transition
               text-left
-            "
+            `}
           >
-            <img
-              src={props.project.imagePath}
-              loading="lazy"
-              decoding="async"
-              draggable={false}
-              alt=""
-              className="w-8 h-8 object-cover rounded bg-white"
-            />
+          <div className="text-left flex flex-row items-center gap-2">
+              <img
+                src={props.project.imagePath}
+                loading="lazy"
+                decoding="async"
+                draggable={false}
+                alt=""
+                className="w-8 h-8 object-cover rounded bg-white"
+              />
 
-            <span className="text-sm font-medium truncate">
-              {props.project.title}
-            </span>
+              <span className="text-sm font-medium truncate">
+                {props.project.title}
+              </span>
+            </div>
+      <div className="flex items-center gap-2 text-[11px] text-muted-foreground truncate">
+        <span className="px-1.5 py-0.5 rounded bg-muted">
+          {props.project.language}
+        </span>
+
+        {props.project.category && (
+          <div className="px-1.5 py-0.5 rounded bg-muted flex flex-row gap-2 items-center justify-center">
+            {props.project.category}
+              <img
+                src={solveImageFromCategory(props.project.category) || undefined}
+                loading="lazy"
+                decoding="async"
+                draggable={false}
+                alt=""
+                className="w-6 h-6 object-cover rounded bg-transparent shrink-0"
+              />
+          </div>
+        )}
+        </div>
+
+
+
           </button>
         </DialogTrigger>
 
@@ -106,13 +133,27 @@ export const ProjectsCard = memo((props: ProjectsCardProps) => {
 
           <div className="px-5 py-4 grid gap-4">
             <div className="flex gap-2 flex-wrap text-xs">
+              {props.project.metadata && (
+                <div className="px-2 py-1 rounded bg-muted flex flex-row">
+                  <span>Author: {props.project.metadata.author}</span>
+                  {props.project.metadata.verified === true && (<BadgeCheck fill="#0047AB" className="text-white" size={12}/>)}
+                </div>
+              )}
               <span className="px-2 py-1 rounded bg-muted">
-                Language: {props.project.language}
+                language: {props.project.language}
               </span>
 
-              <span className="px-2 py-1 rounded bg-muted">
+              <div className="px-2 py-1 rounded bg-muted flex flex-row items-center justify-center gap-1">
                 Category: {props.project.category}
-              </span> 
+              <img
+                src={solveImageFromCategory(props.project.category) || undefined}
+                loading="lazy"
+                decoding="async"
+                draggable={false}
+                alt=""
+                className="w-4 h-4 object-cover rounded bg-transparent shrink-0"
+              />
+              </div> 
             </div>
 
             <div className="grid gap-2">

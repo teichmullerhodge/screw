@@ -29,9 +29,9 @@ const items: Array<SidebarOptions> = [
   },
   {
     title: "Open",
-    url: "/open-project",
+    url: "/projects",
     icon: Inbox,
-    active: false,
+    active: true,
   },
   {
     title: "Templates",

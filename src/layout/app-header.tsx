@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Maximize2, Minus, X } from "lucide-react";
 import React from "react";
 import { getCurrentWindow } from '@tauri-apps/api/window';
+
+
 const appWindow = getCurrentWindow();
 
 interface AppHeaderProps {
@@ -9,7 +11,11 @@ interface AppHeaderProps {
   children: React.ReactNode;
 }
 
+
+
+
 export default function AppHeader(props: AppHeaderProps) {
+  
   return (
     <div className="w-full select-none">
       <div className="flex items-center"

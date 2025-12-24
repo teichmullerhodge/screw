@@ -11,10 +11,12 @@
   },
   "app": {
     "windows": [
-      {
+     {
+        "label": "main",
         "title": "sketch",
-        "width": 800,
-        "height": 600,
+        "center": true,
+        "width": 1000,
+        "height": 650,
         "decorations": false,
         "transparent": true
       }

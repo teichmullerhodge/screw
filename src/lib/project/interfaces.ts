@@ -35,14 +35,21 @@ export interface ProjectManifest {
   steps: Array<ProjectStep>
 }
  
+export interface ProjectMetadata {
+  author: string, 
+  version: string,
+  verified: boolean 
+}
+
 export interface ProjectTemplate {
   identifier: string 
-  title: string, 
+  title: string,
   description: string,
   imagePath: string, 
   manifest: ProjectManifest,
   category: ProjectCategories | null,
   language: ProgrammingLanguages,
+  metadata?: ProjectMetadata,
 }
 
 
