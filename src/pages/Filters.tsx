@@ -1,4 +1,3 @@
-import NothingFound from "@/components/nothing-found"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -12,8 +11,24 @@ import {
 } from "@/components/ui/table"
 import { ProgrammingLanguages, ProjectCategories } from "@/lib/project/interfaces"
 import { solveImageFromCategory, solveImageFromLanguage } from "@/lib/project/utils"
-import { Pencil, Trash } from "lucide-react"
+import { Pencil, Plus, Trash } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+
+type EditableCell = {
+  image: string | undefined
+  name: string
+}
+
 
 interface ProgrammingLanguagesCell {
   image: string | undefined, 
@@ -30,7 +45,15 @@ export default function Filters() {
   const [categories, setCategories] = useState<Array<CategoriesCell>>([]);
   const [selection, setSelection] = useState<"Lang" | "Category">("Lang");
   const [render, setRender] = useState<number>(0); // hack for tick and re-render 
-  const [search, setSearch] = useState<string>("");
+
+  const [editOpen, setEditOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [activeCell, setActiveCell] = useState<EditableCell | null>(null)
+
+  const [editName, setEditName] = useState("")
+  const [editImage, setEditImage] = useState<File | null>(null)
+
+
   const cellArrayRef = useRef<Array<ProgrammingLanguagesCell> | Array<CategoriesCell>>([])
 
   useEffect(() => {
@@ -68,16 +91,74 @@ export default function Filters() {
     cellArrayRef.current = cellArrayRef.current.filter((cell) => cell.name.toLowerCase().includes(s.toLowerCase()));
     setRender(render === 0 ? 1 : 0);
   }
+
+
+  const openEditModal = (cell: EditableCell) => {
+  setActiveCell(cell)
+  setEditName(cell.name)
+  setEditImage(null)
+  setEditOpen(true)
+
+  }
+
+  const openDeleteModal = (cell: EditableCell) => {
+    setActiveCell(cell)
+    setDeleteOpen(true)
+  }
+
+  const handleConfirmEdit = () => {
+    if (!activeCell) return
+
+  const update = (arr: Array<EditableCell>) =>
+    arr.map((c) =>
+      c.name === activeCell.name
+        ? {
+            ...c,
+            name: editName,
+            image: editImage ? URL.createObjectURL(editImage) : c.image,
+          }
+        : c
+    )
+
+  if (selection === "Lang") {
+    setLanguages(update(languages))
+  } else {
+    setCategories(update(categories))
+  }
+
+  setEditOpen(false)
+}
+
+const handleConfirmDelete = () => {
+  if (!activeCell) return
+
+  const filter = (arr: Array<EditableCell>) =>
+    arr.filter((c) => c.name !== activeCell.name)
+
+  if (selection === "Lang") {
+    setLanguages(filter(languages))
+  } else {
+    setCategories(filter(categories))
+  }
+
+  setDeleteOpen(false)
+}
+
+
+
 return (
   <div className="w-full h-[100vh] flex flex-col items-center p-4 overflow-hidden">
     <h1 className="self-start">Filters</h1>
     <h2 className="self-start mt-2 text-[14px] text-zinc-600 font-medium">Manage your filters bellow</h2>
      
-    <div className="w-full flex flex-row gap-2 justify-end mb-2 items-center justify-center">
-      <Input type="search" placeholder="Search..." className="w-50 self-start" onChange={(v) => handleSearchTerm(v.target.value)}/> 
-      <Button className="cursor-pointer" variant={selection === "Lang" ? "default" : "ghost"} onClick={() => setSelection("Lang")}>Languages</Button>
-      <Button className="cursor-pointer" variant={selection === "Category" ? "default" : "ghost"} onClick={() => setSelection("Category")}>Categories</Button>
-    </div>
+    <div className="w-full flex flex-row gap-2 mt-5 items-center justify-between mb-2">
+      <div className="flex flex-row items-center justify-center gap-2">
+        <Input type="search" placeholder="Search..." className="w-50 self-start" onChange={(v) => handleSearchTerm(v.target.value)}/> 
+        <Button className="cursor-pointer" variant={selection === "Lang" ? "default" : "ghost"} onClick={() => setSelection("Lang")}>Languages</Button>
+        <Button className="cursor-pointer" variant={selection === "Category" ? "default" : "ghost"} onClick={() => setSelection("Category")}>Categories</Button>
+      </div>
+      <Button className="cursor-pointer self-end bg-zinc-100" variant={"ghost"}><Plus/></Button>
+      </div>
 
     <Table className="w-full border border-2 rounded-lg overflow-hidden">
       
@@ -115,11 +196,11 @@ return (
 
             <TableCell className="text-center align-middle">
               <div className="flex items-center justify-center gap-2">
-                <Button size="icon" variant="ghost">
+                <Button size="icon" variant="ghost" onClick={() => openDeleteModal(v)}>
                   <Trash className="w-4 h-4" />
                 </Button>
 
-                <Button size="icon" variant="ghost">
+                <Button size="icon" variant="ghost" onClick={() => openEditModal(v)}>
                   <Pencil className="w-4 h-4" />
                 </Button>
               </div>
@@ -127,7 +208,76 @@ return (
           </TableRow>
         ))}
       </TableBody>
+
     </Table>
+
+
+    <Dialog open={editOpen} onOpenChange={setEditOpen}>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Edit {selection === "Lang" ? "Language" : "Category"}</DialogTitle>
+      <DialogDescription>
+        Change name and image
+      </DialogDescription>
+    </DialogHeader>
+
+    <div className="space-y-4">
+      <div>
+        <Label className="mb-2">Name</Label>
+        <Input
+          value={editName}
+          onChange={(e) => setEditName(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <Label className="mb-2">Image</Label>
+        <Input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setEditImage(e.target.files?.[0] ?? null)}
+        />
+      </div>
+    </div>
+
+    <DialogFooter>
+      <Button variant="ghost" onClick={() => setEditOpen(false)}>
+        Cancel
+      </Button>
+      <Button onClick={handleConfirmEdit}>
+        Save
+      </Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+
+
+  <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Delete confirmation</DialogTitle>
+      <DialogDescription>
+        Are you sure you want to delete{" "}
+        <span className="font-medium">
+          {activeCell !== null ? activeCell.name : ""}
+        </span>
+        ?
+      </DialogDescription>
+    </DialogHeader>
+
+    <DialogFooter>
+      <Button variant="ghost" onClick={() => setDeleteOpen(false)}>
+        Cancel
+      </Button>
+      <Button variant="destructive" onClick={handleConfirmDelete}>
+        Delete
+      </Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+
+
+
   </div>
 )
 
