@@ -1,3 +1,6 @@
+import EditFiltersModal from "@/components/filters/edit-filters-modal"
+import DeleteFiltersModal from "@/components/filters/delete-filters-modal"
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -13,16 +16,9 @@ import { ProgrammingLanguages, ProjectCategories } from "@/lib/project/interface
 import { solveImageFromCategory, solveImageFromLanguage } from "@/lib/project/utils"
 import { Pencil, Plus, Trash } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
+import { toast } from "sonner"
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
+
 
 type EditableCell = {
   image: string | undefined
@@ -208,73 +204,29 @@ return (
           </TableRow>
         ))}
       </TableBody>
-
     </Table>
+    <DeleteFiltersModal
+        open={deleteOpen}
+        onOpenChange={(b) => setDeleteOpen(b)}
+        title={activeCell !== null ? activeCell.name : ""}
+        onDelete={() => {
+          toast.message("Deleted.");
+          setDeleteOpen(false)
+        }}  
+    />
 
+    <EditFiltersModal
+      defaultName={activeCell !== null ? activeCell.name : ""}
+      title={activeCell !== null ? activeCell.name : ""}
+      open={editOpen}
+      onOpenChange={(b) => setEditOpen(b)}
+      onSubmit={(n, i)  => {
+        toast.message(`Editing: ${n}`);
+        setEditOpen(false)
+        }
+      }
+    />
 
-    <Dialog open={editOpen} onOpenChange={setEditOpen}>
-  <DialogContent>
-    <DialogHeader>
-      <DialogTitle>Edit {selection === "Lang" ? "Language" : "Category"}</DialogTitle>
-      <DialogDescription>
-        Change name and image
-      </DialogDescription>
-    </DialogHeader>
-
-    <div className="space-y-4">
-      <div>
-        <Label className="mb-2">Name</Label>
-        <Input
-          value={editName}
-          onChange={(e) => setEditName(e.target.value)}
-        />
-      </div>
-
-      <div>
-        <Label className="mb-2">Image</Label>
-        <Input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setEditImage(e.target.files?.[0] ?? null)}
-        />
-      </div>
-    </div>
-
-    <DialogFooter>
-      <Button variant="ghost" onClick={() => setEditOpen(false)}>
-        Cancel
-      </Button>
-      <Button onClick={handleConfirmEdit}>
-        Save
-      </Button>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
-
-
-  <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
-  <DialogContent>
-    <DialogHeader>
-      <DialogTitle>Delete confirmation</DialogTitle>
-      <DialogDescription>
-        Are you sure you want to delete{" "}
-        <span className="font-medium">
-          {activeCell !== null ? activeCell.name : ""}
-        </span>
-        ?
-      </DialogDescription>
-    </DialogHeader>
-
-    <DialogFooter>
-      <Button variant="ghost" onClick={() => setDeleteOpen(false)}>
-        Cancel
-      </Button>
-      <Button variant="destructive" onClick={handleConfirmDelete}>
-        Delete
-      </Button>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
 
 
 
