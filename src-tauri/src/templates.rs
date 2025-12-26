@@ -233,7 +233,7 @@ pub fn save_template_to_config_file(template_path: std::path::PathBuf) -> Config
 
 const SKETCH_MANIFEST_FILE: &str = ".sketch.manifest.json";
 
-pub fn execute_manifest(app: tauri::AppHandle, template: TemplateManifest) -> ManifestOperation {
+pub fn execute_manifest(app: tauri::AppHandle, template: TemplateManifest) -> (Option<String>, ManifestOperation) {
     println!("Executing template: {}", template.name);
     let root = get_sketch_projects_path().join(template.language.clone()).join(template.category.clone()).join(template.name.clone());
     let user_manifest = build_manifest_json(&template, root.display().to_string());    
@@ -243,14 +243,14 @@ pub fn execute_manifest(app: tauri::AppHandle, template: TemplateManifest) -> Ma
             let res = mkdir(root.join(step.path));
             if res.is_err() { 
                 step_error(step.action); 
-                return ManifestOperation::ErrorCreatingDir; 
+                return (None, ManifestOperation::ErrorCreatingDir); 
             }
         }
         OSActions::CreateFile => {
             let res = create_file(root.join(step.path), None);
             if res.is_err() { 
                 step_error(step.action); 
-                return ManifestOperation::ErrorCreatingFile; 
+                return (None, ManifestOperation::ErrorCreatingFile); 
             }
         }
         OSActions::WriteToFile => {
@@ -259,7 +259,7 @@ pub fn execute_manifest(app: tauri::AppHandle, template: TemplateManifest) -> Ma
                     Ok(data) => data,
                     Err(err) => {
                         eprintln!("Error reading {}: {}", step.value, err);
-                        return ManifestOperation::ErrorReadingFromFile;
+                        return (None, ManifestOperation::ErrorReadingFromFile);
                     }
                 }
             } else {
@@ -269,7 +269,7 @@ pub fn execute_manifest(app: tauri::AppHandle, template: TemplateManifest) -> Ma
             let res = write_to_file(root.join(step.path), contents);
             if res.is_err() { 
                 step_error(step.action); 
-                return ManifestOperation::ErrorWritingToFile; 
+                return (None, ManifestOperation::ErrorWritingToFile); 
             }
 
             }
@@ -294,10 +294,10 @@ pub fn execute_manifest(app: tauri::AppHandle, template: TemplateManifest) -> Ma
       eprintln!("Error writing to the manifest file.");   
     }
 
-    let config_res = save_template_to_config_file(root);
+    let config_res = save_template_to_config_file(root.clone());
     match config_res {
         ConfigProjectsResult::ConfigOk => eprintln!("Properly appended the project to the config file."),
         _ => eprintln!("Error in the handle_config_project method.")
     } 
-    ManifestOperation::Success
+    (Some(root.display().to_string()), ManifestOperation::Success)
 }

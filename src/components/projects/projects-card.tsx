@@ -19,8 +19,8 @@ import { Spinner } from "../ui/spinner"
 import { Template } from "@/lib/common-interfaces"
 import { solveImageFromCategory } from "@/lib/templates/utils"
 
-enum ManifestResult {
-    ProjectOk,
+enum ManifestOperation {
+    Success,
     ErrorInvalidJson,
     ErrorCreatingDir,
     ErrorCreatingFile,
@@ -28,22 +28,30 @@ enum ManifestResult {
     ErrorReadingFromFile
 }
 
-function collectErrorMessage(error: ManifestResult){
+function collectErrorMessage(error: ManifestOperation){
   switch(error){
-    case ManifestResult.ProjectOk: return "ok???";
-    case ManifestResult.ErrorInvalidJson: return "The provided JSON is not a valid manifest.";
-    case ManifestResult.ErrorCreatingDir: return "Error creating directory";
-    case ManifestResult.ErrorCreatingFile: return "Error creating file";
-    case ManifestResult.ErrorWritingToFile: return "Error writing to file";
-    case ManifestResult.ErrorReadingFromFile: return "Error reading from file";
+    case ManifestOperation.Success: return "";
+    case ManifestOperation.ErrorInvalidJson: return "The provided JSON is not a valid manifest.";
+    case ManifestOperation.ErrorCreatingDir: return "Error creating directory";
+    case ManifestOperation.ErrorCreatingFile: return "Error creating file";
+    case ManifestOperation.ErrorWritingToFile: return "Error writing to file";
+    case ManifestOperation.ErrorReadingFromFile: return "Error reading from file";
   }
 }
 
-async function createNewProject(template: Template, name: string): Promise<ManifestResult> {
+async function createNewProject(template: Template, name: string): Promise<[string, ManifestOperation]> {
   const obj = template.manifest;
   obj.name = name;
-  const res = await invoke("new_project", { payload: JSON.stringify(obj)}) as ManifestResult;
-  return res 
+  const result = await invoke("new_project", { payload: JSON.stringify(obj)}) as [string, ManifestOperation];
+  const path = result[0] as string;
+  const operation = result[1] as ManifestOperation;
+  if(operation === ManifestOperation.Success) {
+    const shouldOpenProject = localStorage.getItem("open-project-after-creation") === "T";
+    if(shouldOpenProject) await invoke("open_project_folder", { path: path });
+    return [path, operation];
+  }
+
+  return [path, operation] 
 }
 
 interface ProjectsCardProps {
@@ -182,10 +190,10 @@ export const ProjectsCard = memo((props: ProjectsCardProps) => {
                   return;
                 }
                 setLoading(true);
-                const res = await createNewProject(props.template, name);
-
-                if (res !== ManifestResult.ProjectOk) {
-                  const err = collectErrorMessage(res);
+                const result = await createNewProject(props.template, name);
+                const operation = result[1];
+                if (operation !== ManifestOperation.Success) {
+                  const err = collectErrorMessage(operation);
                   toast.error("Error creating your project.", { description: err});
                   setLoading(false);
                   return;

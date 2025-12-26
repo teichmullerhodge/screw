@@ -8,12 +8,12 @@ pub mod filters;
 
 
 #[tauri::command]
-fn new_project(app: tauri::AppHandle, payload: &str) -> templates::ManifestOperation {
+fn new_project(app: tauri::AppHandle, payload: &str) -> (Option<String>, templates::ManifestOperation) {
     println!("Starting new project.");
     let conversion = serde_json::from_str(payload);
     let res = match conversion {
         Ok(p) => execute_manifest(app, p),
-        Err(_err) => templates::ManifestOperation::ErrorInvalidJson
+        Err(_err) => (None, templates::ManifestOperation::ErrorInvalidJson)
     };
 
     res 

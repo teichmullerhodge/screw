@@ -22,7 +22,7 @@ import server from "/assets/server_app.png";
 
 export function solveImageFromCategory(category: null | CustomApplicationCategories | ApplicationCategories){
   switch(category) {
-    case ApplicationCategories.Console_Terminal: return terminal;
+    case ApplicationCategories.Terminal: return terminal;
     case ApplicationCategories.ServerApplication: return server;
     case ApplicationCategories.Gui: return gui;
     case ApplicationCategories.Games: return games;
