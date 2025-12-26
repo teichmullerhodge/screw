@@ -12,11 +12,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { ProgrammingLanguages, ProjectCategories } from "@/lib/project/interfaces"
-import { solveImageFromCategory, solveImageFromLanguage } from "@/lib/project/utils"
 import { Pencil, Plus, Trash } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
+import NewFilterModal from "@/components/filters/new-filter-modal"
+import { ApplicationCategories, ProgrammingLanguages } from "@/lib/common-interfaces"
+import { solveImageFromCategory, solveImageFromLanguage } from "@/lib/templates/utils"
 
 
 
@@ -44,6 +45,7 @@ export default function Filters() {
 
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
+  const [newOpen, setNewOpen] = useState(false);
   const [activeCell, setActiveCell] = useState<EditableCell | null>(null)
 
   const [editName, setEditName] = useState("")
@@ -60,15 +62,15 @@ export default function Filters() {
   useEffect(() => {
 
   const langs = Object.values(ProgrammingLanguages) as Array<string>
-  const cats = Object.values(ProjectCategories) as Array<string> 
+  const categs = Object.values(ApplicationCategories) as Array<string> 
   
   const languagesCell: Array<ProgrammingLanguagesCell> = langs.map((l) => ({
     image: solveImageFromLanguage(l as ProgrammingLanguages) || undefined,
     name: l,
   }));
 
-  const categoriesCell: Array<CategoriesCell> = cats.map((c) => ({
-    image: solveImageFromCategory(c as ProjectCategories) || undefined,
+  const categoriesCell: Array<CategoriesCell> = categs.map((c) => ({
+    image: solveImageFromCategory(c as ApplicationCategories) || undefined,
     name: c,
   }));
 
@@ -153,7 +155,7 @@ return (
         <Button className="cursor-pointer" variant={selection === "Lang" ? "default" : "ghost"} onClick={() => setSelection("Lang")}>Languages</Button>
         <Button className="cursor-pointer" variant={selection === "Category" ? "default" : "ghost"} onClick={() => setSelection("Category")}>Categories</Button>
       </div>
-      <Button className="cursor-pointer self-end bg-zinc-100" variant={"ghost"}><Plus/></Button>
+      <Button className="cursor-pointer self-end bg-zinc-100" variant={"ghost"} onClick={() => setNewOpen(true)}><Plus/></Button>
       </div>
 
     <Table className="w-full border border-2 rounded-lg overflow-hidden">
@@ -221,13 +223,18 @@ return (
       open={editOpen}
       onOpenChange={(b) => setEditOpen(b)}
       onSubmit={(n, i)  => {
-        toast.message(`Editing: ${n}`);
+        toast.message(`Editing: ${n} - ${i}`);
         setEditOpen(false)
         }
       }
     />
-
-
+    
+    <NewFilterModal 
+      open={newOpen}
+      onOpenChange={(b) => setNewOpen(b)}
+      onSubmit={() => {}}
+      selection={selection}
+    />
 
 
   </div>

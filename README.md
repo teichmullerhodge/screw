@@ -135,7 +135,7 @@ Steps can also copy files from Sketch internal resources:
   "action": 2,
   "path": "src/main.c",
   "value": "resources/templates/C/main.c",
-  "isFilePath": true
+  "is_file_path": true
 }
 ```
 
@@ -150,5 +150,4 @@ This copies a real template file into the generated project. Sketch does **not**
 If you can read JSON and understand filesystems, you can write Sketch templates.
 
 ---
-
 

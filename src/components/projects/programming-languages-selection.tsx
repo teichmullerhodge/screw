@@ -1,4 +1,4 @@
-import { ProgrammingLanguages } from "@/lib/project/interfaces";
+import { ProgrammingLanguages } from "@/lib/common-interfaces";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 export interface ProgrammingLanguagesSelectionProps {

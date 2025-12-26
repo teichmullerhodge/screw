@@ -1,8 +1,7 @@
-import { ProjectTemplate } from "@/lib/project/interfaces";
 import { useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import filterNothing from "/assets/filter_nothing.png";
-import commonTemplates from "@/manifests/common.json" 
+import commonTemplates from "@/templates/common.json" 
 import { motion, AnimatePresence } from "framer-motion";
 import ViewSelection from "@/components/projects/view-selection";
 import { ProgrammingLanguagesSelection } from "@/components/projects/programming-languages-selection";
@@ -10,6 +9,7 @@ import { CategoriesSelection } from "@/components/projects/categories-selection"
 import { Grid2x2, Grid3X3, List, TableProperties } from "lucide-react";
 import NothingFound from "@/components/nothing-found";
 import { ProjectsCard } from "@/components/projects/projects-card";
+import { Template } from "@/lib/common-interfaces";
 
 
 
@@ -22,22 +22,22 @@ const CSS_VIEW_RECORD: Record<string, string> = {
 }
 
 
-interface ProjectFilters {
+interface ViewFilters {
   language: string, 
   category: string 
 }
 
 export default function NewProject(){
-  const templates = commonTemplates as Array<ProjectTemplate>;
+  const templates = commonTemplates as Array<Template>;
   const [view, setView] = useState<string>("grid grid-cols-4"); 
-  const [projects, setProjects] = useState<Array<ProjectTemplate>>(templates);
-  const filters = useRef<ProjectFilters>(
+  const [projects, setProjects] = useState<Array<Template>>(templates);
+  const filters = useRef<ViewFilters>(
   {
       "language": "all",
       "category": "all"
   });
 
-  const handleProjectsFilter = (value: string, key: keyof ProjectFilters) => {
+  const handleProjectsFilter = (value: string, key: keyof ViewFilters) => {
     filters.current[key] = value; 
     return applyFilters();
   }
@@ -94,7 +94,7 @@ export default function NewProject(){
                     exit={{ opacity: 0, scale: 0.9 }}
                     transition={{ duration: 0.2 }}
                 >
-                  <ProjectsCard isListView={view === CSS_VIEW_RECORD[PROJECT_VIEWS[0]]} project={project} />
+                  <ProjectsCard isListView={view === CSS_VIEW_RECORD[PROJECT_VIEWS[0]]} template={project} />
                   </motion.div>
                 ))}
               </AnimatePresence>

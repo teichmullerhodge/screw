@@ -1,4 +1,4 @@
-import { ProjectCategories } from "@/lib/project/interfaces";
+import { ApplicationCategories } from "@/lib/common-interfaces";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 
@@ -7,7 +7,7 @@ export interface CategoriesSelectionProps {
 }
 
 export function CategoriesSelection(props: CategoriesSelectionProps) {
-  const categories = Object.values(ProjectCategories);
+  const categories = Object.values(ApplicationCategories);
 
   return (
     <Select onValueChange={(v) => props.onValueChange(v)}>

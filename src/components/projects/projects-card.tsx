@@ -11,13 +11,13 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ProjectTemplate } from "@/lib/project/interfaces"
 import { memo, useState } from "react"
 import { invoke } from "@tauri-apps/api/core"
 import { toast } from "sonner"
-import { solveImageFromCategory } from "@/lib/project/utils"
 import { BadgeCheck } from "lucide-react"
 import { Spinner } from "../ui/spinner"
+import { Template } from "@/lib/common-interfaces"
+import { solveImageFromCategory } from "@/lib/templates/utils"
 
 enum ManifestResult {
     ProjectOk,
@@ -39,15 +39,15 @@ function collectErrorMessage(error: ManifestResult){
   }
 }
 
-async function handleNewProject(project: ProjectTemplate, name: string): Promise<ManifestResult> {
-  const obj = project.manifest;
+async function createNewProject(template: Template, name: string): Promise<ManifestResult> {
+  const obj = template.manifest;
   obj.name = name;
   const res = await invoke("new_project", { payload: JSON.stringify(obj)}) as ManifestResult;
   return res 
 }
 
 interface ProjectsCardProps {
-  project: ProjectTemplate
+  template: Template
   isListView: boolean 
 }
 
@@ -73,7 +73,7 @@ export const ProjectsCard = memo((props: ProjectsCardProps) => {
           >
           <div className="text-left flex flex-row items-center gap-2">
               <img
-                src={props.project.imagePath}
+                src={props.template.imagePath}
                 loading="lazy"
                 decoding="async"
                 draggable={false}
@@ -82,19 +82,19 @@ export const ProjectsCard = memo((props: ProjectsCardProps) => {
               />
 
               <span className="text-sm font-medium truncate">
-                {props.project.title}
+                {props.template.title}
               </span>
             </div>
       <div className="flex items-center gap-2 text-[11px] text-muted-foreground truncate">
         <span className="px-1.5 py-0.5 rounded bg-muted">
-          {props.project.language}
+          {props.template.language}
         </span>
 
-        {props.project.category && (
+        {props.template.category && (
           <div className="px-1.5 py-0.5 rounded bg-muted flex flex-row gap-2 items-center justify-center">
-            {props.project.category}
+            {props.template.category}
               <img
-                src={solveImageFromCategory(props.project.category) || undefined}
+                src={solveImageFromCategory(props.template.category) || undefined}
                 loading="lazy"
                 decoding="async"
                 draggable={false}
@@ -114,18 +114,18 @@ export const ProjectsCard = memo((props: ProjectsCardProps) => {
           <DialogHeader className="px-5 pt-5">
             <div className="flex items-center gap-3">
               <img
-                src={props.project.imagePath}
+                src={props.template.imagePath}
                 alt=""
                 className="w-10 h-10 rounded bg-transparent"
               />
 
               <div className="flex flex-col">
                 <DialogTitle className="text-base">
-                  {props.project.title}
+                  {props.template.title}
                 </DialogTitle>
 
                 <DialogDescription className="text-xs leading-snug">
-                  {props.project.description}
+                  {props.template.description}
                 </DialogDescription>
               </div>
             </div>
@@ -133,20 +133,20 @@ export const ProjectsCard = memo((props: ProjectsCardProps) => {
 
           <div className="px-5 py-4 grid gap-4">
             <div className="flex gap-2 flex-wrap text-xs">
-              {props.project.metadata && (
+              {props.template.metadata && (
                 <div className="px-2 py-1 rounded bg-muted flex flex-row">
-                  <span>Author: {props.project.metadata.author}</span>
-                  {props.project.metadata.verified === true && (<BadgeCheck fill="#0047AB" className="text-white" size={12}/>)}
+                  <span>Author: {props.template.metadata.author}</span>
+                  {props.template.metadata.verified === true && (<BadgeCheck fill="#0047AB" className="text-white" size={12}/>)}
                 </div>
               )}
               <span className="px-2 py-1 rounded bg-muted">
-                language: {props.project.language}
+                language: {props.template.language}
               </span>
 
               <div className="px-2 py-1 rounded bg-muted flex flex-row items-center justify-center gap-1">
-                Category: {props.project.category}
+                Category: {props.template.category}
               <img
-                src={solveImageFromCategory(props.project.category) || undefined}
+                src={solveImageFromCategory(props.template.category) || undefined}
                 loading="lazy"
                 decoding="async"
                 draggable={false}
@@ -163,7 +163,7 @@ export const ProjectsCard = memo((props: ProjectsCardProps) => {
               <Input
                 id="name"
                 onChange={(v) => setName(v.target.value)}
-                placeholder={`${props.project.title}-project`}
+                placeholder={`${props.template.title}-project`}
                 autoFocus
               />
             </div>
@@ -182,7 +182,7 @@ export const ProjectsCard = memo((props: ProjectsCardProps) => {
                   return;
                 }
                 setLoading(true);
-                const res = await handleNewProject(props.project, name);
+                const res = await createNewProject(props.template, name);
 
                 if (res !== ManifestResult.ProjectOk) {
                   const err = collectErrorMessage(res);

@@ -28,12 +28,11 @@ impl TryFrom<u8> for OSActions {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct ProjectStep {
+pub struct OSActionStep {
     #[serde(deserialize_with = "deserialize_action")]
     pub action: OSActions,
     pub path: String,
     pub value: String,
-    #[serde(rename = "isFilePath")]
     pub is_file_path: Option<bool>
 }
 
@@ -46,11 +45,11 @@ where
 }
 
 #[derive(Debug, Deserialize)]
-pub struct ProjectManifest {
+pub struct TemplateManifest {
     name: String,
     language: String, 
     category: String,
-    steps: Vec<ProjectStep>
+    steps: Vec<OSActionStep>
 }
 
 pub fn step_error(action: OSActions) -> () {
@@ -62,18 +61,18 @@ pub fn step_error(action: OSActions) -> () {
 }
 
 
-pub fn projects_config() -> std::path::PathBuf {
+pub fn get_sketch_config_dir_path() -> std::path::PathBuf {
     dirs_next::config_dir().expect("Could not open the config dir").join("sketch")
 }
 
-pub fn projects_root() -> std::path::PathBuf {
+pub fn get_sketch_projects_path() -> std::path::PathBuf {
     dirs_next::document_dir().expect("Could not find the document dir").join("sketch").join("projects")
 }
 
 #[derive(Serialize, Clone)]
 #[serde(into = "u8")]
 pub enum ManifestOperation {
-    ProjectOk = 0,
+    Success = 0,
     ErrorInvalidJson = 1,
     ErrorCreatingDir = 2,
     ErrorCreatingFile = 3,
@@ -88,7 +87,7 @@ impl From<ManifestOperation> for u8 {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct UserProjectManifest {
+pub struct UserTemplate {
     name: String,
     author: String,
     created_at: i64,
@@ -99,31 +98,31 @@ pub struct UserProjectManifest {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct UserProjectManifestResult {
+pub struct UserTemplateResult {
     #[serde(flatten)]
-    pub base: UserProjectManifest,
+    pub base: UserTemplate,
     pub size: u64
 }
 
 
 
-pub fn build_manifest_json(project: &ProjectManifest, path: String) -> UserProjectManifest {
+pub fn build_manifest_json(template: &TemplateManifest, path: String) -> UserTemplate {
     let now = now_ms();
-    UserProjectManifest {
-        name: project.name.clone(), 
+    UserTemplate {
+        name: template.name.clone(), 
         author: "".to_string(), // TODO 
         created_at: now, 
         updated_at: now, 
-        category: project.category.clone(),
-        language: project.language.clone(),
+        category: template.category.clone(),
+        language: template.language.clone(),
         path: path
     }
 }
 
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct ConfigProjects {
-    projects: Vec<String>,
+pub struct ConfigTemplatesLocation {
+    templates: Vec<String>,
 }
 
 
@@ -134,9 +133,9 @@ pub enum UserProjectsOperation {
     PartialManifestErrors = 3,
 }
 
-pub fn collect_user_projects() -> Result<Vec<UserProjectManifestResult>, UserProjectsOperation> {
-    let mut user_projects: Vec<UserProjectManifestResult> = Vec::new();
-    let config_path = projects_config().join(SKETCH_CONFIG_FILE);
+pub fn collect_user_projects() -> Result<Vec<UserTemplateResult>, UserProjectsOperation> {
+    let mut user_projects: Vec<UserTemplateResult> = Vec::new();
+    let config_path = get_sketch_config_dir_path().join(SKETCH_CONFIG_FILE);
     if !config_path.exists() {
         return Err(UserProjectsOperation::NoConfigFile)
     }
@@ -146,8 +145,8 @@ pub fn collect_user_projects() -> Result<Vec<UserProjectManifestResult>, UserPro
         return Err(UserProjectsOperation::ErrorReadingConfigFile);
     }
 
-    let configs: ConfigProjects = serde_json::from_str(&contents.unwrap_or("".to_string())).unwrap_or(ConfigProjects { projects: Vec::new() });
-    for paths in configs.projects {
+    let configs: ConfigTemplatesLocation = serde_json::from_str(&contents.unwrap_or("".to_string())).unwrap_or(ConfigTemplatesLocation { templates: Vec::new() });
+    for paths in configs.templates {
         let root_path = std::path::PathBuf::new().join(paths);
         let sketch_path = root_path.join(SKETCH_MANIFEST_FILE);
         let sketch_contents = read_file(sketch_path);
@@ -156,14 +155,14 @@ pub fn collect_user_projects() -> Result<Vec<UserProjectManifestResult>, UserPro
             continue 
         }
         let sketch_string = sketch_contents.unwrap_or("".to_string());
-        let project_manifest: Result<UserProjectManifest, serde_json::Error> = serde_json::from_str(&sketch_string);
+        let project_manifest: Result<UserTemplate, serde_json::Error> = serde_json::from_str(&sketch_string);
         if project_manifest.is_err() {
             eprintln!("Error parsing manifest file at project in collect_user_projects");
             continue 
         }
 
         let folder_size = dir_size(&root_path).unwrap_or(0);
-        let manifest_result = UserProjectManifestResult {
+        let manifest_result = UserTemplateResult {
             base: project_manifest.unwrap(),
             size: folder_size 
         };
@@ -187,8 +186,8 @@ pub enum ConfigProjectsResult {
 }
 
 
-pub fn save_project_to_config_file(project_path: std::path::PathBuf) -> ConfigProjectsResult {
-    let config = projects_config();
+pub fn save_template_to_config_file(template_path: std::path::PathBuf) -> ConfigProjectsResult {
+    let config = get_sketch_config_dir_path();
     if !config.exists() {
      let config_res = mkdir(config.clone());
      if config_res.is_err() {
@@ -213,8 +212,8 @@ pub fn save_project_to_config_file(project_path: std::path::PathBuf) -> ConfigPr
         return ConfigProjectsResult::ErrorReadingFromFile;
     }
 
-    let mut config_file: ConfigProjects = serde_json::from_str(&contents.unwrap_or("".to_string())).unwrap_or(ConfigProjects { projects: Vec::new() });
-    config_file.projects.push(project_path.display().to_string()); // attention to this fuckness.
+    let mut config_file: ConfigTemplatesLocation = serde_json::from_str(&contents.unwrap_or("".to_string())).unwrap_or(ConfigTemplatesLocation { templates: Vec::new() });
+    config_file.templates.push(template_path.display().to_string()); // attention to this fuckness.
     // Maybe this is not right. 
     let string_contents = match serde_json::to_string_pretty(&config_file) {
         Ok(s) => s, 
@@ -234,11 +233,11 @@ pub fn save_project_to_config_file(project_path: std::path::PathBuf) -> ConfigPr
 
 const SKETCH_MANIFEST_FILE: &str = ".sketch.manifest.json";
 
-pub fn execute_manifest(app: tauri::AppHandle, project: ProjectManifest) -> ManifestOperation {
-    println!("Executing manifest: {}", project.name);
-    let root = projects_root().join(project.language.clone()).join(project.category.clone()).join(project.name.clone());
-    let user_manifest = build_manifest_json(&project, root.display().to_string());    
-    for step in project.steps {
+pub fn execute_manifest(app: tauri::AppHandle, template: TemplateManifest) -> ManifestOperation {
+    println!("Executing template: {}", template.name);
+    let root = get_sketch_projects_path().join(template.language.clone()).join(template.category.clone()).join(template.name.clone());
+    let user_manifest = build_manifest_json(&template, root.display().to_string());    
+    for step in template.steps {
     match step.action {
         OSActions::Mkdir => {
             let res = mkdir(root.join(step.path));
@@ -295,10 +294,10 @@ pub fn execute_manifest(app: tauri::AppHandle, project: ProjectManifest) -> Mani
       eprintln!("Error writing to the manifest file.");   
     }
 
-    let config_res = save_project_to_config_file(root);
+    let config_res = save_template_to_config_file(root);
     match config_res {
         ConfigProjectsResult::ConfigOk => eprintln!("Properly appended the project to the config file."),
         _ => eprintln!("Error in the handle_config_project method.")
     } 
-    ManifestOperation::ProjectOk
+    ManifestOperation::Success
 }

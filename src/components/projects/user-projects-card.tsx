@@ -9,17 +9,17 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { memo, useState } from "react"
-import { UserProjectTemplate } from "@/lib/user-projects/interfaces"
 
 import { formatSize } from "@/helpers/formatter"
-import { solveImageFromCategory, solveImageFromLanguage } from "@/lib/project/utils"
 import { Spinner } from "../ui/spinner"
 import { invoke } from "@tauri-apps/api/core"
 import { toast } from "sonner"
+import { UserTemplate } from "@/lib/custom-interfaces"
+import { solveImageFromCategory, solveImageFromLanguage } from "@/lib/templates/utils"
 
 
 interface UserProjectsCardProps {
-  project: UserProjectTemplate
+  template: UserTemplate
 }
 
 export const UserProjectsCard = memo((props: UserProjectsCardProps) => {
@@ -41,7 +41,7 @@ export const UserProjectsCard = memo((props: UserProjectsCardProps) => {
     "
   >
     <img
-      src={solveImageFromLanguage(props.project.language) || undefined}
+      src={solveImageFromLanguage(props.template.language) || undefined}
       loading="lazy"
       decoding="async"
       draggable={false}
@@ -51,19 +51,19 @@ export const UserProjectsCard = memo((props: UserProjectsCardProps) => {
 
     <div className="flex flex-col gap-1 min-w-0 flex-1">
       <span className="text-sm font-medium truncate">
-        {props.project.name}
+        {props.template.name}
       </span>
 
       <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
         <span className="px-1.5 py-0.5 rounded bg-muted">
-          {props.project.language}
+          {props.template.language}
         </span>
 
-        {props.project.category && (
+        {props.template.category && (
           <div className="px-1.5 py-0.5 rounded bg-muted flex flex-row gap-2 items-center justify-center">
-            {props.project.category}
+            {props.template.category}
               <img
-                src={solveImageFromCategory(props.project.category) || undefined}
+                src={solveImageFromCategory(props.template.category) || undefined}
                 loading="lazy"
                 decoding="async"
                 draggable={false}
@@ -75,11 +75,11 @@ export const UserProjectsCard = memo((props: UserProjectsCardProps) => {
       </div>
 
       <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[10px] text-muted-foreground">
-        <span>{formatSize(props.project.size)}</span>
+        <span>{formatSize(props.template.size)}</span>
         <span>•</span>
         <span>
           Updated at{" "}
-          {new Date(props.project.updated_at).toLocaleDateString()}
+          {new Date(props.template.updated_at).toLocaleDateString()}
         </span>
       </div>
     </div>
@@ -89,14 +89,14 @@ export const UserProjectsCard = memo((props: UserProjectsCardProps) => {
           <DialogHeader className="px-5 pt-5">
             <div className="flex items-center gap-3">
               <img
-                src={solveImageFromLanguage(props.project.language) || undefined}
+                src={solveImageFromLanguage(props.template.language) || undefined}
                 alt=""
                 className="w-10 h-10 rounded bg-transparent"
               />
 
               <div className="flex flex-col">
                 <DialogTitle className="text-base">
-                  {props.project.name}
+                  {props.template.name}
                 </DialogTitle>
 
              </div>
@@ -106,11 +106,11 @@ export const UserProjectsCard = memo((props: UserProjectsCardProps) => {
           <div className="px-5 py-4 grid gap-4">
             <div className="flex gap-2 flex-wrap text-xs">
               <span className="px-2 py-1 rounded bg-muted">
-                Language: {props.project.language}
+                Language: {props.template.language}
               </span>
 
               <span className="px-2 py-1 rounded bg-muted">
-                Category: {props.project.category}
+                Category: {props.template.category}
               </span> 
             </div>
           </div>
@@ -123,9 +123,9 @@ export const UserProjectsCard = memo((props: UserProjectsCardProps) => {
             </DialogClose>
 
             <Button type="submit" onClick={async () => {
-              const opened = await invoke("open_project_folder", { path: props.project.path });
+              const opened = await invoke("open_project_folder", { path: props.template.path });
               if(!opened) {
-                toast.error(`Error opening path: ${props.project.path}`, { description: "The path exists?" });
+                toast.error(`Error opening path: ${props.template.path}`, { description: "The path exists?" });
                 return;
               }
             }}>

@@ -1,25 +1,28 @@
-use crate::projects::{ collect_user_projects, execute_manifest };
 use tauri_plugin_opener::OpenerExt;
 
-pub mod projects; 
+use crate::templates::{collect_user_projects, execute_manifest};
+pub mod templates; 
 pub mod helpers;
+pub mod filters;
 
 
 
 #[tauri::command]
-fn new_project(app: tauri::AppHandle, payload: &str) -> projects::ManifestOperation {
+fn new_project(app: tauri::AppHandle, payload: &str) -> templates::ManifestOperation {
     println!("Starting new project.");
     let conversion = serde_json::from_str(payload);
     let res = match conversion {
         Ok(p) => execute_manifest(app, p),
-        Err(_err) => projects::ManifestOperation::ErrorInvalidJson
+        Err(_err) => templates::ManifestOperation::ErrorInvalidJson
     };
 
     res 
 }
 
+
+
 #[tauri::command]
-fn read_projects() -> Vec<projects::UserProjectManifestResult> {
+fn read_projects() -> Vec<templates::UserTemplateResult> {
     match collect_user_projects() {
         Ok(p) => p,
         Err(_err) => vec![]

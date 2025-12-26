@@ -7,7 +7,7 @@ export enum ProgrammingLanguages {
   Zig = "Zig",
 }
 
-export enum ProjectCategories {
+export enum ApplicationCategories {
   Console_Terminal = "Console/Terminal",
   ServerApplication = "Server application",
   Gui = "Gui", 
@@ -15,43 +15,44 @@ export enum ProjectCategories {
   Graphics = "Graphics",
 }
 
+
 export enum OSActions {
   Mkdir, 
   CreateFile,
   WriteToFile 
 }
 
-export interface ProjectStep {
-  action: OSActions,
-  path: string, 
-  value: string, // string or filepath 
-  isFilePath?: boolean
-}
 
-export interface ProjectManifest {
+export interface OSActionStep {
+  action: OSActions,
+  path: string,
+  value: string, 
+  is_file_path?: boolean 
+} 
+
+export interface TemplateManifest {
   name: string,
   language: string,
   category: string,
-  steps: Array<ProjectStep>
+  steps: Array<OSActionStep>
 }
- 
-export interface ProjectMetadata {
+
+export interface TemplateMetadata {
   author: string, 
   version: string,
   verified: boolean 
 }
 
-export interface ProjectTemplate {
+export interface Template {
   identifier: string 
   title: string,
   description: string,
   imagePath: string, 
-  manifest: ProjectManifest,
-  category: ProjectCategories | null,
+  manifest: TemplateManifest,
+  category: ApplicationCategories | null,
   language: ProgrammingLanguages,
-  metadata?: ProjectMetadata,
+  metadata?: TemplateMetadata,
 }
-
 
 
 

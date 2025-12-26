@@ -4,7 +4,6 @@ import { Grid2x2, Grid3X3, List } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import filterNothing from "/assets/filter_nothing.png";
 import { motion, AnimatePresence } from "framer-motion";
-import { UserProjectTemplate } from "@/lib/user-projects/interfaces";
 import ViewSelection from "@/components/projects/view-selection";
 import { ProgrammingLanguagesSelection } from "@/components/projects/programming-languages-selection";
 import { CategoriesSelection } from "@/components/projects/categories-selection";
@@ -13,8 +12,8 @@ import { UserProjectsCard } from "@/components/projects/user-projects-card";
 import { invoke } from "@tauri-apps/api/core";
 
 import noProjectYet from "/assets/no_project_yet.png";
+import { UserTemplate } from "@/lib/custom-interfaces";
 
-import { toast } from "sonner";
 
 const PROJECT_VIEWS = ["List", "Grid 2x2", "Grid 3x3"];
 const CSS_VIEW_RECORD: Record<string, string> = {
@@ -24,16 +23,16 @@ const CSS_VIEW_RECORD: Record<string, string> = {
 }
 
 
-interface ProjectFilters {
+interface ViewFilters {
   language: string, 
   category: string 
 }
 
 export default function Projects(){
   const [view, setView] = useState<string>("grid grid-cols-3"); 
-  const [userProjects, setUserProjects] = useState<Array<UserProjectTemplate>>([]);
-  const projectsRef = useRef<Array<UserProjectTemplate>>([]);
-  const filters = useRef<ProjectFilters>(
+  const [userProjects, setUserProjects] = useState<Array<UserTemplate>>([]);
+  const projectsRef = useRef<Array<UserTemplate>>([]);
+  const filters = useRef<ViewFilters>(
   {
       "language": "all",
       "category": "all"
@@ -41,7 +40,7 @@ export default function Projects(){
 
   useEffect(() => {
     const collect_projects = async () => {
-      const res = await invoke("read_projects") as Array<UserProjectTemplate>;
+      const res = await invoke("read_projects") as Array<UserTemplate>;
       setUserProjects(res);
       projectsRef.current = res;
     }
@@ -50,7 +49,7 @@ export default function Projects(){
   
   }, [])
 
-  const handleProjectsFilter = (value: string, key: keyof ProjectFilters) => {
+  const handleProjectsFilter = (value: string, key: keyof ViewFilters) => {
     filters.current[key] = value; 
     return applyFilters();
   }
@@ -106,7 +105,7 @@ export default function Projects(){
                     exit={{ opacity: 0, scale: 0.9 }}
                     transition={{ duration: 0.2 }}
                 >
-                  <UserProjectsCard project={project} />
+                  <UserProjectsCard template={project} />
                   </motion.div>
                 ))}
               </AnimatePresence>

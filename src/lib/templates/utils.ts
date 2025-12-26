@@ -1,5 +1,5 @@
-import { UserProgrammingLanguages, UserProjectCategories, UserProjectTemplate } from "../user-projects/interfaces";
-import { ProgrammingLanguages, ProjectCategories, ProjectTemplate } from "./interfaces";
+import { CustomProgrammingLanguages, CustomApplicationCategories } from "../custom-interfaces";
+import { ProgrammingLanguages, ApplicationCategories } from "../common-interfaces";
 
 import ada from "/assets/ada_prog.png";
 import asm from "/assets/asm_prog.png";
@@ -20,18 +20,18 @@ import gui from "/assets/gui_app.png";
 import server from "/assets/server_app.png";
 
 
-export function solveImageFromCategory(category: null | UserProjectCategories | ProjectCategories){
+export function solveImageFromCategory(category: null | CustomApplicationCategories | ApplicationCategories){
   switch(category) {
-    case ProjectCategories.Console_Terminal: return terminal;
-    case ProjectCategories.ServerApplication: return server;
-    case ProjectCategories.Gui: return gui;
-    case ProjectCategories.Games: return games;
-    case ProjectCategories.Graphics: return graphical;
+    case ApplicationCategories.Console_Terminal: return terminal;
+    case ApplicationCategories.ServerApplication: return server;
+    case ApplicationCategories.Gui: return gui;
+    case ApplicationCategories.Games: return games;
+    case ApplicationCategories.Graphics: return graphical;
 
   }
 }
 
-export function solveImageFromLanguage(lang: null | UserProgrammingLanguages | ProgrammingLanguages){
+export function solveImageFromLanguage(lang: null | CustomProgrammingLanguages | ProgrammingLanguages){
   
   switch(lang){
     case ProgrammingLanguages.Ada: return ada;
