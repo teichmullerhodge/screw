@@ -174,7 +174,7 @@ pub fn collect_user_projects() -> Result<Vec<UserTemplateResult>, UserProjectsOp
 
 const SKETCH_CONFIG_FILE: &str   = ".sketch.projects.json";
 const SKETCH_CONFIG_FILE_INITIAL_VALUE: &str = r#"{
-    "projects": []
+    "templates": []
 }"#;
 
 pub enum ConfigProjectsResult {

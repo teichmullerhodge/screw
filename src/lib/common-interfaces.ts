@@ -8,7 +8,7 @@ export enum ProgrammingLanguages {
 }
 
 export enum ApplicationCategories {
-  Console_Terminal = "Console/Terminal",
+  Terminal = "Terminal",
   ServerApplication = "Server application",
   Gui = "Gui", 
   Games = "Games",

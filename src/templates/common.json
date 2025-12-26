@@ -1,22 +1,22 @@
 [
 {
   "identifier": "C",
-  "title": "C Console Project",
+  "title": "C Terminal Project",
   "description": "A C project focused on console and terminal applications. Includes stdio.h and stdlib.h, a basic main function, argument handling, and a template that prints a message to standard output.",
   "imagePath": "/assets/c_prog.png",
-  "category": "Console/Terminal",
+  "category": "Terminal",
   "language": "C",
   "manifest": {
     "name": "app",
     "language": "C",
-    "category": "Console/Terminal",
+    "category": "Terminal",
     "steps": [
       { "action": 0, "path": "build", "value": "" },
       { "action": 0, "path": "src", "value": "" },
       { "action": 1, "path": "src/main.c", "value": "" },
       { "action": 1, "path": "cc.sh", "value": "" },
-      { "action": 2, "path": "src/main.c", "value": "resources/templates/C/main.c", "isFilePath": true },
-      { "action": 2, "path": "cc.sh", "value": "resources/templates/C/cc.sh", "isFilePath": true }
+      { "action": 2, "path": "src/main.c", "value": "resources/templates/C/main.c", "is_file_path": true },
+      { "action": 2, "path": "cc.sh", "value": "resources/templates/C/cc.sh", "is_file_path": true }
     ]
   },
   "metadata": {
@@ -27,22 +27,22 @@
   },
  {
     "identifier": "CPP",
-    "title": "C++ Console Project",
+    "title": "C++ Terminal Project",
     "description": "A C++ console project. Includes iostream, a basic main function, standard output usage, and a minimal structure for command-line execution.",
     "imagePath": "/assets/cpp_prog.png",
-    "category": "Console/Terminal",
+    "category": "Terminal",
     "language": "C++",
     "manifest": {
       "name": "app",
       "language": "C++",
-      "category": "Console/Terminal",
+      "category": "Terminal",
       "steps": [
         { "action": 0, "path": "build", "value": "" },
         { "action": 0, "path": "src", "value": "" },
         { "action": 1, "path": "src/main.cpp", "value": "" },
         { "action": 1, "path": "cc.sh", "value": "" },
-        { "action": 2, "path": "src/main.cpp", "value": "resources/templates/CPP/main.cpp", "isFilePath": true },
-        { "action": 2, "path": "cc.sh", "value": "resources/templates/CPP/cc.sh", "isFilePath": true }
+        { "action": 2, "path": "src/main.cpp", "value": "resources/templates/CPP/main.cpp", "is_file_path": true },
+        { "action": 2, "path": "cc.sh", "value": "resources/templates/CPP/cc.sh", "is_file_path": true }
       ]
     },
     "metadata": {
@@ -53,22 +53,22 @@
   },
   {
     "identifier": "Assembly",
-    "title": "Assembly Console Project",
+    "title": "Assembly Terminal Project",
     "description": "An Assembly console program. Includes an entry point, system calls for writing to standard output, and a minimal executable layout.",
     "imagePath": "/assets/asm_prog.png",
-    "category": "Console/Terminal",
+    "category": "Terminal",
     "language": "Assembly x86",
     "manifest": {
       "name": "app",
       "language": "Assembly x86",
-      "category": "Console/Terminal",
+      "category": "Terminal",
       "steps": [
         { "action": 0, "path": "build", "value": "" },
         { "action": 0, "path": "src", "value": "" },
         { "action": 1, "path": "src/main.asm", "value": "" },
         { "action": 1, "path": "cc.sh", "value": "" },
-        { "action": 2, "path": "src/main.asm", "value": "resources/templates/Assembly/main.asm", "isFilePath": true },
-        { "action": 2, "path": "cc.sh", "value": "resources/templates/Assembly/cc.sh", "isFilePath": true }
+        { "action": 2, "path": "src/main.asm", "value": "resources/templates/Assembly/main.asm", "is_file_path": true },
+        { "action": 2, "path": "cc.sh", "value": "resources/templates/Assembly/cc.sh", "is_file_path": true }
       ]
     },
   "metadata": {
@@ -79,30 +79,30 @@
   },
   {
     "identifier": "Ada",
-    "title": "Ada Console Project",
+    "title": "Ada Terminal Project",
     "description": "An Ada console project. Includes a main procedure, basic text output, and a minimal program structure for terminal execution.",
     "imagePath": "/assets/ada_prog.png",
-    "category": "Console/Terminal",
+    "category": "Terminal",
     "language": "Ada",
-    "manifest": { "name": "app", "language": "Ada", "category": "Console/Terminal", "steps": [] }
+    "manifest": { "name": "app", "language": "Ada", "category": "Terminal", "steps": [] }
   },
   {
     "identifier": "Rust",
-    "title": "Rust Console Project",
+    "title": "Rust Terminal Project",
     "description": "A Rust console project. Includes a main function, standard output printing, basic argument access, and a minimal executable structure.",
     "imagePath": "/assets/rust_prog.png",
-    "category": "Console/Terminal",
+    "category": "Terminal",
     "language": "Rust",
-    "manifest": { "name": "app", "language": "Rust", "category": "Console/Terminal", "steps": [] }
+    "manifest": { "name": "app", "language": "Rust", "category": "Terminal", "steps": [] }
   },
   {
     "identifier": "Zig",
-    "title": "Zig Console Project",
+    "title": "Zig Terminal Project",
     "description": "A Zig console project. Includes a main function, standard output printing, basic error handling, and a minimal build configuration.",
     "imagePath": "/assets/zig_prog.png",
-    "category": "Console/Terminal",
+    "category": "Terminal",
     "language": "Zig",
-    "manifest": { "name": "app", "language": "Zig", "category": "Console/Terminal", "steps": [] }
+    "manifest": { "name": "app", "language": "Zig", "category": "Terminal", "steps": [] }
   },
   {
     "identifier": "GTK",

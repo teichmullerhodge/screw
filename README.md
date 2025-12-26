@@ -79,7 +79,7 @@ Below is a simplified explanation using the **C Console Project** template as an
   "title": "C Console Project",
   "description": "A C project focused on console and terminal applications.",
   "imagePath": "/assets/c_prog.png",
-  "category": "Console/Terminal",
+  "category": "Terminal",
   "language": "C",
 ```
 
