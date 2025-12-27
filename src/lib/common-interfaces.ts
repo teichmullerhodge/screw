@@ -55,4 +55,38 @@ export interface Template {
 }
 
 
+export interface CommonFilter {
+  name: string,
+  image_path: string 
+}
+
+
+export interface CommonFilterPayload {
+  name: string,
+  image_path: string,
+  key: string 
+}
+
+export interface Filters {
+
+  languages: Array<CommonFilter>, 
+  categories: Array<CommonFilter> 
+
+}
+
+export enum FiltersOperation {
+    Success = 0,
+    ErrorReadingFromFile = 1,
+    ErrorWritingToFile = 2,
+    ErrorCreatingFile = 3,
+    ErrorParsingJson = 4,
+    ErrorSerializingJson = 5,
+}
+
+
+
+
+
+
+
 

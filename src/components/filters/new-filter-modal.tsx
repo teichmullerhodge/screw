@@ -7,69 +7,85 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
-import { useRef, useState } from "react"
+import { useState } from "react"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
+import { Image } from "lucide-react"
+import { open } from "@tauri-apps/plugin-dialog"
+import { getFileName } from "@/helpers/formatter"
 
 export interface NewFilterModalProps {
  open: boolean 
  onOpenChange: (v: boolean) => void 
- onSubmit: (name: string, image: File | null) => void
+ onSubmit: (name: string, image_path: string | null) => void
  selection: "Lang" | "Category" 
 }
 
-export default function NewFilterModal(props: NewFilterModalProps){
+export default function NewFilterModal(props: NewFilterModalProps) {
 
-  const nameRef = useRef<string>("");
-  const imageRef = useRef<File | null>(null);
-  const [tick, setTick] = useState<number>(0);
+  const [name, setName] = useState("");
+  const [imagePath, setImagePath] = useState<string | null>(null);
 
-  return(
+  return (
     <Dialog open={props.open} onOpenChange={props.onOpenChange}>
-  <DialogContent>
-    <DialogHeader>
-      <DialogTitle> New {props.selection === "Lang" ? "language" : "category"} </DialogTitle>
-      <DialogDescription>
-        Add an name and image 
-      </DialogDescription>
-    </DialogHeader>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>
+            New {props.selection === "Lang" ? "language" : "category"}
+          </DialogTitle>
+          <DialogDescription>
+            Add a name and image
+          </DialogDescription>
+        </DialogHeader>
 
-    <div className="space-y-4">
-      <div>
-        <Label className="mb-2">Name</Label>
-        <Input
-          value={nameRef.current}
-          onChange={(e) => { 
-            nameRef.current = e.target.value;
-            setTick(tick == 0 ? 1 : 0);
-          }}
-        />
-      </div>
+        <div className="space-y-4">
+          <div>
+            <Label className="mb-2">Name</Label>
+            <Input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
 
-      <div>
-        <Label className="mb-2">Image</Label>
-        <Input
-          type="file"
-          accept="image/*"
-          onChange={(e) => { 
-            imageRef.current = e.target.files?.[0] ?? null;
-            setTick(tick == 0 ? 1 : 0);
-          }}
-        />
-      </div>
-    </div>
+          <div>
+            <Label className="mb-2">Image</Label>
+            <Button
+              type="button"
+              onClick={async () => {
+                const path = await open({
+                  multiple: false,
+                  directory: false,
+                  filters: [
+                    {
+                      name: "Images",
+                      extensions: ["png","jpg","jpeg","webp","svg","avif"],
+                    }
+                  ]
+                });
 
-    <DialogFooter>
-      <Button variant="ghost" onClick={() => props.onOpenChange(false)}>
-        Cancel
-      </Button>
-      <Button onClick={() => props.onSubmit(nameRef.current, imageRef.current)}>
-        Save
-      </Button>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
+                if (typeof path === "string") {
+                  setImagePath(path);
+                }
+              }}
+            >
+              <Image />
+              {imagePath === null
+                ? " No file selected"
+                : getFileName(imagePath)}
+            </Button>
+          </div>
+        </div>
 
-  )
-
+        <DialogFooter>
+          <Button variant="ghost" onClick={() => props.onOpenChange(false)}>
+            Cancel
+          </Button>
+          <Button onClick={() => props.onSubmit(name, imagePath)}>
+            Save
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
 }
+

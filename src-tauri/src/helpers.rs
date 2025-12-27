@@ -1,7 +1,9 @@
 use std::io::Write;
 use std::path::PathBuf;
-use tauri::{AppHandle, Manager};
 use std::time::{SystemTime, UNIX_EPOCH};
+use tauri::{AppHandle, Manager};
+
+use crate::templates::get_sketch_config_dir_path;
 
 pub fn mkdir(path: PathBuf) -> Result<(), std::io::Error> {
     if let Err(e) = std::fs::create_dir_all(&path) {
@@ -15,17 +17,13 @@ pub fn read_file(path: PathBuf) -> Result<String, String> {
     std::fs::read_to_string(path).map_err(|e| e.to_string())
 }
 
-
 pub fn read_template(app: &AppHandle, relative_path: PathBuf) -> Result<String, String> {
-    let mut path: PathBuf = app.path()
-        .resource_dir()
-        .map_err(|e| e.to_string())?;
+    let mut path: PathBuf = app.path().resource_dir().map_err(|e| e.to_string())?;
 
     path.push(relative_path);
 
     std::fs::read_to_string(path).map_err(|e| e.to_string())
 }
-
 
 pub fn create_file(path: PathBuf, contents: Option<String>) -> Result<(), Box<dyn std::error::Error>> {
     let mut file = match std::fs::File::create(&path) {
@@ -85,5 +83,34 @@ pub fn now_ms() -> i64 {
         .duration_since(UNIX_EPOCH)
         .unwrap()
         .as_millis() as i64
+}
+
+pub fn random_timestamp_string() -> String {
+
+    SystemTime::now()
+    .duration_since(UNIX_EPOCH)
+    .unwrap()
+    .as_nanos()
+    .to_string()
+
+}
+
+pub fn persist_asset(path: String) -> Result<String, String> {
+    let src = std::path::PathBuf::from(&path);
+
+    let target_dir = get_sketch_config_dir_path().join("assets"); 
+ 
+
+
+    let target = target_dir.join(
+        src.file_name()
+        .unwrap_or(std::ffi::OsStr::new(&format!("assets_{}", random_timestamp_string())))
+    );
+
+
+    std::fs::create_dir_all(&target_dir).map_err(|e| e.to_string())?;
+    std::fs::copy(&src, &target).map_err(|e| e.to_string())?;
+
+    Ok(target.to_string_lossy().to_string())
 }
 

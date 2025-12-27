@@ -17,3 +17,7 @@ export function formatSize(bytes: number): string {
   return `${formatted} ${units[unitIndex]}`;
 }
 
+export function getFileName(path: string) {
+  return path.split(/[/\\]/).pop();
+}
+

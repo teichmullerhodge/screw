@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label"
 import { useRef, useState } from "react"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
+import { toast } from "sonner"
 
 export interface EditFiltersModalProps {
  open: boolean 
@@ -52,8 +53,12 @@ export default function EditFiltersModal(props: EditFiltersModalProps){
         <Input
           type="file"
           accept="image/*"
-          onChange={(e) => { 
-            imageRef.current = e.target.files?.[0] ?? null;
+          onChange={(e) => {
+            if(e.target.files === null) return; // no file selected 
+            const image = e.target.files[0];
+            const path = image.webkitRelativePath 
+            toast.message(`Path: ${path}`);
+            imageRef.current = image; 
             setTick(tick == 0 ? 1 : 0);
           }}
         />

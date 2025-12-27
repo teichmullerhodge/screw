@@ -18,6 +18,7 @@ import { BadgeCheck } from "lucide-react"
 import { Spinner } from "../ui/spinner"
 import { Template } from "@/lib/common-interfaces"
 import { solveImageFromCategory } from "@/lib/templates/utils"
+import { open } from '@tauri-apps/plugin-dialog';
 
 enum ManifestOperation {
     Success,

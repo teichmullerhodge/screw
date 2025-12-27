@@ -16,32 +16,33 @@ import { Pencil, Plus, Trash } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import NewFilterModal from "@/components/filters/new-filter-modal"
-import { ApplicationCategories, ProgrammingLanguages } from "@/lib/common-interfaces"
+import { ApplicationCategories, type Filters, FiltersOperation, ProgrammingLanguages, CommonFilterPayload } from "@/lib/common-interfaces"
 import { solveImageFromCategory, solveImageFromLanguage } from "@/lib/templates/utils"
+import { convertFileSrc, invoke } from "@tauri-apps/api/core"
 
 
 
 type EditableCell = {
-  image: string | undefined
+  image_path: string | undefined
   name: string
 }
 
 
 interface ProgrammingLanguagesCell {
-  image: string | undefined, 
+  image_path: string | undefined, 
   name: string 
 }
 
 interface CategoriesCell {
-  image: string | undefined, 
+  image_path: string | undefined, 
   name: string 
 }
 
 export default function Filters() {
   const [languages, setLanguages] = useState<Array<ProgrammingLanguagesCell>>([]);
   const [categories, setCategories] = useState<Array<CategoriesCell>>([]);
+  const [cellArray, setCellArray] = useState<Array<CategoriesCell | ProgrammingLanguagesCell>>([]);
   const [selection, setSelection] = useState<"Lang" | "Category">("Lang");
-  const [render, setRender] = useState<number>(0); // hack for tick and re-render 
 
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
@@ -52,12 +53,10 @@ export default function Filters() {
   const [editImage, setEditImage] = useState<File | null>(null)
 
 
-  const cellArrayRef = useRef<Array<ProgrammingLanguagesCell> | Array<CategoriesCell>>([])
-
   useEffect(() => {
-    cellArrayRef.current = selection === "Lang" ? languages : categories;
-    setRender(render == 0 ? 1 : 0);
-  }, [selection, languages, categories])
+    if(selection === "Lang") setCellArray(languages);
+    if(selection === "Category") setCellArray(categories);
+  }, [selection])
 
   useEffect(() => {
 
@@ -65,30 +64,45 @@ export default function Filters() {
   const categs = Object.values(ApplicationCategories) as Array<string> 
   
   const languagesCell: Array<ProgrammingLanguagesCell> = langs.map((l) => ({
-    image: solveImageFromLanguage(l as ProgrammingLanguages) || undefined,
+    image_path: solveImageFromLanguage(l as ProgrammingLanguages) || undefined,
     name: l,
   }));
 
   const categoriesCell: Array<CategoriesCell> = categs.map((c) => ({
-    image: solveImageFromCategory(c as ApplicationCategories) || undefined,
+    image_path: solveImageFromCategory(c as ApplicationCategories) || undefined,
     name: c,
   }));
 
-  setLanguages(languagesCell);
-  setCategories(categoriesCell);
+
+  // get custom filters (defined by user) 
+
+  const getUserFilters = async () => {
+    const res = await invoke("list_filters") as [Filters | null, FiltersOperation];
+    console.log(JSON.stringify(res, null, 2));
+    const filters = res[0];
+    const operation = res[1];
+    const ok = operation === FiltersOperation.Success;
+    if(filters === null) {
+      console.log(`Filters null`);
+      setLanguages(languagesCell);
+      setCategories(categoriesCell);
+      setCellArray(languagesCell);
+      return;
+    }
+    const lCell = ok ? [...languagesCell, ...filters.languages] : languagesCell;
+    const cCell = ok ? [...categoriesCell, ...filters.categories] : categoriesCell;
+    console.log(`ok? ${ok} - Value of cCell: ${JSON.stringify(cCell, null, 2)}`);
+    setLanguages(lCell);
+    setCategories(cCell);
+    setCellArray(lCell);
+    return;
+  }
+
+  getUserFilters();
 
   }, [])
 
-  const handleSearchTerm = (s: string) => {
-    if(s.trim() === "") {
-      cellArrayRef.current = selection === "Lang" ? languages : categories;
-      setRender(render === 0 ? 1 : 0); // tick 
-      return;
-    }
-    cellArrayRef.current = selection === "Lang" ? languages : categories;
-    cellArrayRef.current = cellArrayRef.current.filter((cell) => cell.name.toLowerCase().includes(s.toLowerCase()));
-    setRender(render === 0 ? 1 : 0);
-  }
+
 
 
   const openEditModal = (cell: EditableCell) => {
@@ -104,44 +118,6 @@ export default function Filters() {
     setDeleteOpen(true)
   }
 
-  const handleConfirmEdit = () => {
-    if (!activeCell) return
-
-  const update = (arr: Array<EditableCell>) =>
-    arr.map((c) =>
-      c.name === activeCell.name
-        ? {
-            ...c,
-            name: editName,
-            image: editImage ? URL.createObjectURL(editImage) : c.image,
-          }
-        : c
-    )
-
-  if (selection === "Lang") {
-    setLanguages(update(languages))
-  } else {
-    setCategories(update(categories))
-  }
-
-  setEditOpen(false)
-}
-
-const handleConfirmDelete = () => {
-  if (!activeCell) return
-
-  const filter = (arr: Array<EditableCell>) =>
-    arr.filter((c) => c.name !== activeCell.name)
-
-  if (selection === "Lang") {
-    setLanguages(filter(languages))
-  } else {
-    setCategories(filter(categories))
-  }
-
-  setDeleteOpen(false)
-}
-
 
 
 return (
@@ -151,7 +127,7 @@ return (
      
     <div className="w-full flex flex-row gap-2 mt-5 items-center justify-between mb-2">
       <div className="flex flex-row items-center justify-center gap-2">
-        <Input type="search" placeholder="Search..." className="w-50 self-start" onChange={(v) => handleSearchTerm(v.target.value)}/> 
+        <Input type="search" placeholder="Search..." className="w-50 self-start" onChange={(v) => {}}/> 
         <Button className="cursor-pointer" variant={selection === "Lang" ? "default" : "ghost"} onClick={() => setSelection("Lang")}>Languages</Button>
         <Button className="cursor-pointer" variant={selection === "Category" ? "default" : "ghost"} onClick={() => setSelection("Category")}>Categories</Button>
       </div>
@@ -173,7 +149,7 @@ return (
       </TableHeader>
 
       <TableBody>
-        {cellArrayRef.current.map((v) => (
+        {cellArray.map((v) => (
           <TableRow
             key={v.name}
             className="hover:bg-muted/40 transition-colors"
@@ -181,7 +157,7 @@ return (
             <TableCell className="text-center align-middle">
               <div className="flex items-center justify-center">
                 <img
-                  src={v.image}
+                  src={v.image_path}
                   alt={v.name}
                   className="w-7 h-7 object-contain"
                 />
@@ -232,7 +208,30 @@ return (
     <NewFilterModal 
       open={newOpen}
       onOpenChange={(b) => setNewOpen(b)}
-      onSubmit={() => {}}
+      onSubmit={async (name, image_path) => {
+        if(image_path === null || name.trim() === "") {
+          toast.warning("You need to add a name and an image to your filter.");
+          return;
+        }
+
+        const key = selection === "Lang" ? "languages" : "categories";
+        const keyValue = selection === "Lang" ? "language" : "category";
+        const addFiltersPayload: CommonFilterPayload = {
+          name: name, 
+          image_path: image_path,
+          key: key
+        };
+        const res = await invoke("add_filter", { payload: JSON.stringify(addFiltersPayload, null, 2) }) as [string | null, boolean];
+        const path = res[0];
+        const ok = res[1];
+        if(ok && path !== null) {
+          toast.message(`${keyValue} properly added.`);
+          return;
+        }
+        
+        toast.error(`Error adding a new ${keyValue}. Try again later.`);
+        return;
+      }}
       selection={selection}
     />
 
